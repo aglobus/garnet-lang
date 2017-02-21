@@ -1,0 +1,6 @@
+% var x : integer = 5
+var x : integer = 5
+(* module *) 
+
+% $ .pDollar should NOT be emitted
+# % .pHash should be emitted
