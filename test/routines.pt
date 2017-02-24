@@ -1,0 +1,7 @@
+using output
+def * P ()
+    val foo = 5
+end
+
+def V ()
+end

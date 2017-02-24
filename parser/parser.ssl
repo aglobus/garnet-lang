@@ -179,12 +179,17 @@ Block :
 	    | 'var':
 		.sVar
 		@VariableDeclarations
-	    | 'procedure':
+	    | 'def':
 		.sProcedure
 		% procedure name
+    [
+    | '*':
+      .sPublic
+    | *:
+    ]
 		pIdentifier  .sIdentifier
 		@ProcedureHeading
-		@Block  ';'
+		@Block  'end'
 	    | *:
 		>
 	]};
@@ -301,15 +306,15 @@ VariableDeclarations :
 	]};
 
 OptVarDecl :
-[{
-  | ',':
-.sVar
-pIdentifier
-.sIdentifier
-@OptVarDecl
-  | *;
->
-}];
+  [{
+    | ',':
+  .sVar
+  pIdentifier
+  .sIdentifier
+  @OptVarDecl
+    | *;
+  >
+  }];
 
 ProcedureHeading :
 	% Accept zero or more procedure formal parameter declarations.
