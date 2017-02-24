@@ -145,22 +145,24 @@ Output :
 rules
 
 Program :
-	'program'  .sProgram
+	'using'  .sProgram
 	% program name
 	pIdentifier
+  .sIdentifier
 	% program parameters
-	'('
-	{
-	    pIdentifier  .sIdentifier
-	    [
-		| ',':
-		| *:
-		    >
-	    ]
-	}
-	')'
+	% '('
+	% {
+	%     pIdentifier  .sIdentifier
+	%     [
+	% 	| ',':
+	% 	| *:
+	% 	    >
+	%     ]
+	% }
+	% ')'
 	.sParmEnd
-	';'  @Block  '.';
+  @Block;
+	% ';'  @Block  '.';
 
 Block :
 	% Strictly speaking, standard Pascal requires that declarations
@@ -168,7 +170,7 @@ Block :
 	% We allow arbitrary intermixing of these instead to preserve
 	% programmer sanity.
 	{[
-	    | 'const':
+	    | 'val':
 		.sConst
 		@ConstantDefinitions
 	    | 'type':
@@ -185,18 +187,18 @@ Block :
 		@Block  ';'
 	    | *:
 		>
-	]}
-	'begin'
-	@BeginStmt;
+	]};
+	% 'begin'
+	% @BeginStmt;
 
 ConstantDefinitions :
 	% Accept one or more named constant definitions
 	pIdentifier  .sIdentifier
-	@ConstantValue ';'
+	@ConstantValue
 	{[
 	    | pIdentifier:
 		.sIdentifier
-		@ConstantValue ';'
+		@ConstantValue
 	    | *:
 		>
 	]};
@@ -228,11 +230,11 @@ UnsignedIntegerConstant :
 TypeDefinitions :
 	% Accept one or more named type definitions.
 	pIdentifier  .sIdentifier
-	'='  @TypeBody  ';'
+	':'  @TypeBody
 	{[
 	    | pIdentifier:
 		.sIdentifier
-		'='  @TypeBody  ';'
+		':'  @TypeBody
 	    | *:
 		>
 	]};
@@ -286,14 +288,28 @@ OptionallySignedIntegerConstant :
 VariableDeclarations :
 	% Accept one or more variable declarations.
 	pIdentifier  .sIdentifier
-	':'  @TypeBody  ';'
+
+  @OptVarDecl
+
+	':'  @TypeBody
 	{[
 	    | pIdentifier:
 		.sIdentifier
-		':'  @TypeBody  ';'
+		':'  @TypeBody
 	    | *:
 		>
 	]};
+
+OptVarDecl :
+[{
+  | ',':
+.sVar
+pIdentifier
+.sIdentifier
+@OptVarDecl
+  | *;
+>
+}];
 
 ProcedureHeading :
 	% Accept zero or more procedure formal parameter declarations.

@@ -1,3 +1,5 @@
-program HelloWorld ( output );
-begin
-end.
+using output
+val c = 27
+var v : string
+type t : integer
+var a,b,c : integer
