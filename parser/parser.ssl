@@ -179,6 +179,10 @@ Block :
 	    | 'var':
 		.sVar
 		@VariableDeclarations
+      | 'module':
+    .sModule
+    pIdentifier .sIdentifier
+    @Block 'end'
 	    | 'def':
 		.sProcedure
 		% procedure name
