@@ -161,14 +161,17 @@ Program :
 	% }
 	% ')'
 	.sParmEnd
-  @Block;
+  @DecsAndStmts;
+  % @Block;
 	% ';'  @Block  '.';
 
-Block :
-	% Strictly speaking, standard Pascal requires that declarations
-	% appear only in the order consts, types, vars, procedures.
-	% We allow arbitrary intermixing of these instead to preserve
-	% programmer sanity.
+DecsAndStmts :
+  @Declarations
+  % .sBegin
+  @Statements;
+  % .sEnd;
+
+Declarations : 
 	{[
 	    | 'val':
 		.sConst
@@ -182,7 +185,7 @@ Block :
       | 'module':
     .sModule
     pIdentifier .sIdentifier
-    @Block 'end'
+    @DecsAndStmts 'end'
 	    | 'def':
 		.sProcedure
 		% procedure name
@@ -193,10 +196,49 @@ Block :
     ]
 		pIdentifier  .sIdentifier
 		@ProcedureHeading
-		@Block  'end'
+		@DecsAndStmts  'end'
 	    | *:
 		>
 	]};
+
+Statements :
+  @BeginStmt;
+
+% Block :
+	% Strictly speaking, standard Pascal requires that declarations
+	% appear only in the order consts, types, vars, procedures.
+	% We allow arbitrary intermixing of these instead to preserve
+	% programmer sanity.
+
+	% {[
+	%     | 'val':
+	% 	.sConst
+	% 	@ConstantDefinitions
+	%     | 'type':
+	% 	.sType
+	% 	@TypeDefinitions
+	%     | 'var':
+	% 	.sVar
+	% 	@VariableDeclarations
+  %     | 'module':
+  %   .sModule
+  %   pIdentifier .sIdentifier
+  %   @Block 'end'
+	%     | 'def':
+	% 	.sProcedure
+	% 	% procedure name
+  %   [
+  %   | '*':
+  %     .sPublic
+  %   | *:
+  %   ]
+	% 	pIdentifier  .sIdentifier
+	% 	@ProcedureHeading
+	% 	@Block  'end'
+	%     | *:
+	% 	>
+	% ]};
+
 	% 'begin'
 	% @BeginStmt;
 
@@ -437,6 +479,7 @@ IfStmt :
 	    | 'else':
 		.sElse
 		@Statement
+      | 'end':
 	    | *:
 	];
 

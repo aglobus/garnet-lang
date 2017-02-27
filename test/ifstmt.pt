@@ -1,0 +1,10 @@
+using output
+val x = 5
+val y = 6
+var z : integer
+
+if x < y then
+	z := 1
+else
+	z := 2
+end
