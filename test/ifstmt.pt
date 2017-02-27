@@ -1,10 +1,8 @@
 using output
-val x = 5
-val y = 6
-var z : integer
 
 if x < y then
-	z = 1
+   x = 1;
+   y = 2;
 else
-	z = 2
+   z = 3;
 end
