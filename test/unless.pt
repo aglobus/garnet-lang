@@ -1,0 +1,6 @@
+using output
+
+unless x < y then
+  z = w;
+  k = 5
+end

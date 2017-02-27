@@ -404,6 +404,8 @@ Statement :
 		@CaseStmt
 	    | 'repeat':
 		@RepeatStmt
+      | 'unless':
+    @UnlessStmt
 	    | *:
 		.sNullStmt
 	];
@@ -489,7 +491,7 @@ IfStmt :
     .sEnd
 		    >
 	    ]
-	}
+	};
 
 	% @Statement
 	% [
@@ -499,6 +501,30 @@ IfStmt :
   %     | 'end':
 	%     | *:
 	% ];
+
+% Same as IfStmt only .sNot emitted after @Expression
+UnlessStmt :
+	.sIfStmt
+	@Expression
+  .sNot
+	.sExpnEnd
+	'then'  .sThen
+
+	.sBegin
+	{
+	    @Statement
+	    [
+    | ';':
+    | 'else':
+    .sEnd
+    .sElse
+    .sBegin
+    @Statement
+    | 'end':
+    .sEnd
+		    >
+	    ]
+	};
 
 CaseStmt :
 	.sCaseStmt
