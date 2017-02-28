@@ -447,15 +447,20 @@ IfStmt :
 
   @Statements
   [
+    | 'elsif':
+      .sElse
+      .sBegin
+      @IfStmt
+      .sEnd
     | 'else':
-    .sElse
-    @Statements
-    [
-      | 'end':
-      >
-    ]
+      .sElse
+      @Statements
+      [
+        | 'end':
+        >
+      ]
     | 'end':
-    >
+      >
   ];
 
 	% {
