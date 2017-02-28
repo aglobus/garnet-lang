@@ -1,5 +1,12 @@
 using output
-val c = 27
-var v : string
-type t : integer
-var a,b,c : integer
+module M
+def * O ()
+  val c = 26
+  var x : integer
+  type t : string
+end
+
+def P ()
+  var a,b,c,d,e,f : string
+end
+end

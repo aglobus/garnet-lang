@@ -1,0 +1,11 @@
+using output
+case i
+    when 42,43 then
+    x = 5
+
+    when 44 then
+    x = 1
+
+    else
+    x = 99
+end

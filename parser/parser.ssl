@@ -149,27 +149,12 @@ Program :
 	% program name
 	pIdentifier
   .sIdentifier
-	% program parameters
-	% '('
-	% {
-	%     pIdentifier  .sIdentifier
-	%     [
-	% 	| ',':
-	% 	| *:
-	% 	    >
-	%     ]
-	% }
-	% ')'
 	.sParmEnd
   @DecsAndStmts;
-  % @Block;
-	% ';'  @Block  '.';
 
 DecsAndStmts :
   @Declarations
-  % .sBegin
   @Statements;
-  % .sEnd;
 
 Declarations : 
 	{[
@@ -202,45 +187,27 @@ Declarations :
 	]};
 
 Statements :
-  @BeginStmt;
-
-% Block :
-	% Strictly speaking, standard Pascal requires that declarations
-	% appear only in the order consts, types, vars, procedures.
-	% We allow arbitrary intermixing of these instead to preserve
-	% programmer sanity.
-
-	% {[
-	%     | 'val':
-	% 	.sConst
-	% 	@ConstantDefinitions
-	%     | 'type':
-	% 	.sType
-	% 	@TypeDefinitions
-	%     | 'var':
-	% 	.sVar
-	% 	@VariableDeclarations
-  %     | 'module':
-  %   .sModule
-  %   pIdentifier .sIdentifier
-  %   @Block 'end'
-	%     | 'def':
-	% 	.sProcedure
-	% 	% procedure name
-  %   [
-  %   | '*':
-  %     .sPublic
-  %   | *:
-  %   ]
-	% 	pIdentifier  .sIdentifier
-	% 	@ProcedureHeading
-	% 	@Block  'end'
-	%     | *:
-	% 	>
-	% ]};
-
-	% 'begin'
-	% @BeginStmt;
+  .sBegin
+	{[
+	    | pIdentifier:
+		@AssignmentOrCallStmt
+	    | 'begin':
+		@BeginStmt
+	    | 'if':
+		@IfStmt
+	    | 'while':
+		@WhileStmt
+	    | 'case':
+		@CaseStmt
+	    | 'repeat':
+		@RepeatStmt
+      | 'unless':
+    @UnlessStmt
+	    | *:
+		.sNullStmt
+      .sEnd
+      >
+	]};
 
 ConstantDefinitions :
 	% Accept one or more named constant definitions
@@ -408,6 +375,7 @@ Statement :
     @UnlessStmt
 	    | *:
 		.sNullStmt
+      >
 	];
 
 AssignmentOrCallStmt :
@@ -477,21 +445,33 @@ IfStmt :
 	.sExpnEnd
 	'then'  .sThen
 
-	.sBegin
-	{
-	    @Statement
-	    [
-    | ';':
+  @Statements
+  [
     | 'else':
-    .sEnd
     .sElse
-    .sBegin
-    @Statement
+    @Statements
+    [
+      | 'end':
+      >
+    ]
     | 'end':
-    .sEnd
-		    >
-	    ]
-	};
+    >
+  ];
+
+	% {
+	%     @Statement
+	%     [
+  %   | ';':
+  %   | 'else':
+  %   .sEnd
+  %   .sElse
+  %   .sBegin
+  %   @Statement
+  %   | 'end':
+  %   .sEnd
+	% 	    >
+	%     ]
+	% };
 
 	% @Statement
 	% [
@@ -502,7 +482,7 @@ IfStmt :
 	%     | *:
 	% ];
 
-% Same as IfStmt only .sNot emitted after @Expression
+% Same as IfStmt except .sNot emitted after @Expression
 UnlessStmt :
 	.sIfStmt
 	@Expression
@@ -510,43 +490,66 @@ UnlessStmt :
 	.sExpnEnd
 	'then'  .sThen
 
-	.sBegin
-	{
-	    @Statement
-	    [
-    | ';':
+  @Statements
+  [
     | 'else':
-    .sEnd
     .sElse
-    .sBegin
-    @Statement
+    @Statements
+    [
+      | 'end':
+      >
+    ]
     | 'end':
-    .sEnd
-		    >
-	    ]
-	};
+    >
+  ];
 
 CaseStmt :
 	.sCaseStmt
 	@Expression
 	.sExpnEnd
-	'of'
-	@CaseAlternative
-	{[
-	    | ';':
-		% since case alternatives cannot be null, allow
-		% for the common situation of an extra semicolon
-		% at the end of the list of case alternatives.
-		[
-		    | 'end':
-			>
-		    | *:
-			@CaseAlternative
-		]
-	    | 'end':
-		>
-	]}
-	.sCaseEnd;
+
+  'when'
+  @CaseAlt
+  {[
+    | 'when':
+      @CaseAlt
+    | 'else':
+      .sElse
+      @Statements
+    | 'end':
+      .sCaseEnd
+      >
+  ]};
+
+	% @CaseAlternative
+	% {[
+	%     | ';':
+	% 	% since case alternatives cannot be null, allow
+	% 	% for the common situation of an extra semicolon
+	% 	% at the end of the list of case alternatives.
+	% 	[
+	% 	    | 'end':
+	% 		>
+	% 	    | *:
+	% 		@CaseAlternative
+	% 	]
+	%     | 'end':
+	% 	>
+	% ]}
+
+	% .sCaseEnd;
+
+CaseAlt :
+{
+  @OptionallySignedIntegerConstant
+  [
+    | ',':
+    | *:
+      >
+  ]
+}
+'then'
+@Statements;
 
 CaseAlternative :
 	% A case alternative is a statement labelled by

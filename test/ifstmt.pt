@@ -1,8 +1,13 @@
 using output
+var x : integer
+
 
 if x < y then
-   x = 1;
-   y = 2;
-else
-   z = 3;
+   z = w
+end
+
+unless x < y then
+   z = w
+   else
+   z = k
 end
