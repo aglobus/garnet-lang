@@ -199,8 +199,8 @@ Statements :
 		@WhileStmt
 	    | 'case':
 		@CaseStmt
-	    | 'repeat':
-		@RepeatStmt
+	    | 'do':
+		@DoStmt
       | 'unless':
     @UnlessStmt
 	    | *:
@@ -369,8 +369,8 @@ Statement :
 		@WhileStmt
 	    | 'case':
 		@CaseStmt
-	    | 'repeat':
-		@RepeatStmt
+	    | 'do':
+		@DoStmt
       | 'unless':
     @UnlessStmt
 	    | *:
@@ -455,10 +455,12 @@ IfStmt :
     | 'else':
       .sElse
       @Statements
-      [
-        | 'end':
-        >
-      ]
+      'end'
+      >
+      % [
+      %   | 'end':
+      %   >
+      % ]
     | 'end':
       >
   ];
@@ -578,6 +580,17 @@ WhileStmt :
 	'do'
 	@Statement;
 
+DoStmt :
+  .sDoStmt
+  @Statements
+  'break'
+  'if'
+  .sBreakIf
+  @Expression
+	.sExpnEnd
+  @Statements
+  'end';
+
 RepeatStmt :
 	.sRepeatStmt
 	{
@@ -595,9 +608,9 @@ RepeatStmt :
 Expression :
 	@SimpleExpression
 	[
-	    | '=':
+	    | '==':
 		@SimpleExpression  .sEq
-	    | '<>':
+	    | '!=':
 		@SimpleExpression  .sNE
 	    | '<':
 		@SimpleExpression  .sLT
@@ -654,7 +667,7 @@ Factor :
 		.sInteger
 	    | '(':
 		@Expression  ')'
-	    | 'not':
+	    | '!':
 		@Factor
 		.sNot
 	    | pLiteral:

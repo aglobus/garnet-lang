@@ -1,0 +1,33 @@
+using output
+
+if x = 1 then
+   y = 2
+elsif z = 2 then
+      if q = 4 then
+         if t = 4 then
+           do
+              r = 5
+              p = 3
+              break if true
+              s = 2
+            end
+         else
+            x = 4
+         end
+      else
+        jk = 3
+      end
+else
+  case i
+       when 42 then
+            tk = 6
+            pk = 7
+       when 43 then
+            rk = 8
+       else
+            jk = 95
+  end
+unless x = y then
+       jk = pk
+end
+end

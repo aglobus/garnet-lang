@@ -1,9 +1,10 @@
 using output
 var x : integer
 
-
 if x < y then
   z = w
-elsif x > y then
+elsif 1 < 2 then
   z = k
+else
+  z = 1
 end

@@ -139,10 +139,10 @@
 	AssignmentOrCallStmt = 502;
 	BeginStmt = 586;
 	IfStmt = 612;
-	WhileStmt = 792;
-	CaseStmt = 712;
-	RepeatStmt = 803;
-	UnlessStmt = 667;
+	WhileStmt = 783;
+	CaseStmt = 703;
+	DoStmt = 794;
+	UnlessStmt = 658;
 	ConstantValue = 167;
 	UnsignedIntegerConstant = 209;
 	TypeBody = 255;
@@ -151,17 +151,18 @@
 	OptVarDecl = 384;
 	$NIL = 405;
 	Statement = 454;
-	Expression = 833;
+	Expression = 843;
 	CallStmt = 542;
-	CaseAlt = 754;
-	CaseAlternative = 772;
-	SimpleExpression = 887;
-	Term = 940;
-	Factor = 984;
-	IdentifierExtension = 1042;
+	CaseAlt = 745;
+	CaseAlternative = 763;
+	RepeatStmt = 813;
+	SimpleExpression = 897;
+	Term = 950;
+	Factor = 994;
+	IdentifierExtension = 1052;
 	}
 
 	{ S/SL Table Parameters }
-	sslTblSize = 1072;
+	sslTblSize = 1082;
 	minSslTableValue = -32767;
 	maxSslTableValue = 32767;
