@@ -1,4 +1,4 @@
-using output
+using output, output2, output3
 val c = 27
 var : string
 c = 14

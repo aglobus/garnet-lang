@@ -149,6 +149,12 @@ Program :
 	% program name
 	pIdentifier
   .sIdentifier
+  {[
+    | ',':
+      pIdentifier .sIdentifier
+    | *:
+      >
+  ]}
 	.sParmEnd
   @DecsAndStmts;
 

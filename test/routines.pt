@@ -1,9 +1,14 @@
 using output
 def * P (var x : string, y : integer)
+  val c = 31
+  y = c
 end
 
 def V (x : integer, var s : string)
 end
 
 def * X ()
+  type t : string
+  var v : t
 end
+
