@@ -11,4 +11,3 @@ def * X ()
   type t : string
   var v : t
 end
-

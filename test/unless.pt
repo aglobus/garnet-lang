@@ -1,6 +1,8 @@
 using output
 
-unless x < y then
-  z = w;
+unless x == y then
+  z = w
   k = 5
+  else
+    k = 6
 end

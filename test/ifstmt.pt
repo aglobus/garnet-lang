@@ -1,10 +1,19 @@
 using output
-var x : integer
 
-if x < y then
-  z = w
-elsif 1 < 2 then
-  z = k
+if x == 1 then
+	y = 2
+elsif z == 2 then
+	y = 3
+else 
+	y = 4
+end
+
+if x == 1 then
+	y = 2
 else
-  z = 1
+	if z == 2 then
+		y = 3
+	else
+		y = 4
+	end
 end

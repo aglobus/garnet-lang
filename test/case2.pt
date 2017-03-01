@@ -1,10 +1,10 @@
 using output
 case i
     when 42,43 then
-    x = 5
+    x = 1
 
     when 44 then
-    x = 1
+    x = 2
 
     else
     x = 99

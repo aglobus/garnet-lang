@@ -180,7 +180,7 @@ Declarations :
 	    | 'def':
       @HandleProcedure
 	    | *:
-		>
+      >
 	]};
 
 HandleProcedure :
@@ -215,6 +215,7 @@ Statements :
 		@DoStmt
       | 'unless':
     @UnlessStmt
+      | ';':
 	    | *:
 		% .sNullStmt
       .sEnd
@@ -224,14 +225,16 @@ Statements :
 ConstantDefinitions :
 	% Accept one or more named constant definitions
 	pIdentifier  .sIdentifier
-	@ConstantValue
-	{[
-	    | pIdentifier:
-		.sIdentifier
-		@ConstantValue
-	    | *:
-		>
-	]};
+	@ConstantValue;
+
+  % In Garnet, a constant can only have ONE DEFINITION
+	% {[
+	%     | pIdentifier:
+	% 	.sIdentifier
+	% 	@ConstantValue
+	%     | *:
+  %   >
+	% ]};
 
 ConstantValue :
 	'='
@@ -260,14 +263,14 @@ UnsignedIntegerConstant :
 TypeDefinitions :
 	% Accept one or more named type definitions.
 	pIdentifier  .sIdentifier
-	':'  @TypeBody
-	{[
-	    | pIdentifier:
-		.sIdentifier
-		':'  @TypeBody
-	    | *:
-		>
-	]};
+	':'  @TypeBody;
+	% {[
+	%     | pIdentifier:
+	% 	.sIdentifier
+	% 	':'  @TypeBody
+	%     | *:
+	% 	>
+	% ]};
 
 TypeBody :
 	[
@@ -361,6 +364,7 @@ ProcedureHeading :
       [
         | ',':
         | ')':
+        .sParmEnd
           >
         | *:
           >
@@ -514,10 +518,6 @@ UnlessStmt :
     | 'else':
     .sElse
     @Statements
-    [
-      | 'end':
-      >
-    ]
     | 'end':
     >
   ];
@@ -568,6 +568,7 @@ CaseAlt :
   ]
 }
 'then'
+.sLabelEnd % Necessary if you want to keep the same semantic output stream as PT
 @Statements;
 
 CaseAlternative :
