@@ -1,0 +1,6 @@
+using output
+x = "hello there" ? "the"
+
+x = #"Hey"
+
+x = "hello" $ 1..3

@@ -1,4 +1,7 @@
 using output, output2, output3
-val c = 27
-var : string
-c = 14
+val c = 27 % declaration
+var : string % declaration
+; % should be ignored
+c = 14 % statement
+; % should also be ignored 
+;;

@@ -158,11 +158,13 @@
 	RepeatStmt = 804;
 	SimpleExpression = 888;
 	Term = 941;
-	Factor = 985;
-	IdentifierExtension = 1043;
+	SubTerm = 993;
+	Factor = 1018;
+	Range = 1011;
+	IdentifierExtension = 1084;
 	}
 
 	{ S/SL Table Parameters }
-	sslTblSize = 1073;
+	sslTblSize = 1114;
 	minSslTableValue = -32767;
 	maxSslTableValue = 32767;

@@ -657,19 +657,35 @@ SimpleExpression :
 	]};
 
 Term :
-	@Factor
+  @SubTerm
 	{[
 	    | '*':
-		@Factor  .sMultiply
+		@SubTerm  .sMultiply
 	    | 'div':
-		@Factor  .sDivide
+		@SubTerm  .sDivide
 	    | 'mod':
-		@Factor  .sModulus
+		@SubTerm  .sModulus
+      | '?':
+    @Subterm .sIndex
 	    | 'and':
-		.sInfixAnd  @Factor  .sAnd
+		.sInfixAnd  @SubTerm  .sAnd
 	    | *:
 		>
 	]};
+
+SubTerm :
+        @Factor
+        {[
+          | '$':
+            @Range .sSubstring
+          | *:
+            >
+        ]};
+
+Range :
+      @Factor
+      '..'
+      @Factor;
 
 Factor :
 	[
@@ -683,6 +699,9 @@ Factor :
 	    | '!':
 		@Factor
 		.sNot
+      | '#':
+    @Factor
+    .sLength
 	    | pLiteral:
 		.sLiteral
 	    | 'file':
