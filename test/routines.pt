@@ -1,7 +1,9 @@
 using output
-def * P ()
-    val foo = 5
+def * P (var x : string, y : integer)
 end
 
-def V ()
+def V (x : integer, var s : string)
+end
+
+def * X ()
 end

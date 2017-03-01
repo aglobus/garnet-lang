@@ -172,19 +172,25 @@ Declarations :
     pIdentifier .sIdentifier
     @DecsAndStmts 'end'
 	    | 'def':
-		.sProcedure
-		% procedure name
-    [
-    | '*':
-      .sPublic
-    | *:
-    ]
-		pIdentifier  .sIdentifier
-		@ProcedureHeading
-		@DecsAndStmts  'end'
+      @HandleProcedure
 	    | *:
 		>
 	]};
+
+HandleProcedure :
+		.sProcedure % procedure name
+    [
+    | '*':
+      .sIdentifier
+      .sPublic
+      pIdentifier
+    | *:
+      pIdentifier  .sIdentifier
+    ]
+		@ProcedureHeading
+		@DecsAndStmts
+    'end';
+
 
 Statements :
   .sBegin
@@ -204,7 +210,7 @@ Statements :
       | 'unless':
     @UnlessStmt
 	    | *:
-		.sNullStmt
+		% .sNullStmt
       .sEnd
       >
 	]};
@@ -325,37 +331,37 @@ OptVarDecl :
   pIdentifier
   .sIdentifier
   @OptVarDecl
-    | *;
+    | *:
   >
   }];
 
 ProcedureHeading :
 	% Accept zero or more procedure formal parameter declarations.
-	[
-	    | '(':
+  [
+    | '(':
 		{
-		    % formal parameter identifier
-		    [
-			| 'var':
-			    pIdentifier  .sIdentifier
-			    .sVar
-			| *:
-			    pIdentifier  .sIdentifier
-		    ]
-		    ':'
-		    % type identifier
-		    pIdentifier  .sIdentifier
-		    [
-			| ';':
-			| *:
-			    >
-		    ]
-		}
-		')'
-	    | *:
-	]
-	';'
-	.sParmEnd;
+      [
+        | 'var':
+          pIdentifier .sIdentifier
+          .sVar
+        | ')':
+          .sParmEnd
+          >
+        | *:
+          pIdentifier .sIdentifier
+      ]
+      ':'
+      pIdentifier .sIdentifier
+      [
+        | ',':
+        | ')':
+          >
+        | *:
+          >
+      ]
+    }
+    | *:
+  ];
 
 Statement :
 	[
