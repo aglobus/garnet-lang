@@ -149,6 +149,7 @@ Program :
 	% program name
 	pIdentifier
   .sIdentifier
+  % Read in multiple identifiers that can follow 'using'
   {[
     | ',':
       pIdentifier .sIdentifier
@@ -156,12 +157,17 @@ Program :
       >
   ]}
 	.sParmEnd
+  % Call our new rule to read declarations and statements
   @DecsAndStmts;
 
+% New rule that reads in a series of declarations followed by a series of statements
 DecsAndStmts :
   @Declarations
   @Statements;
 
+% Looping match rule that looks for one of the following keywords
+% Depending on what we read, follow through and call the appropriate rule
+% If we see none then exit
 Declarations : 
 	{[
 	    | 'val':
@@ -173,7 +179,7 @@ Declarations :
 	    | 'var':
 		.sVar
 		@VariableDeclarations
-      | 'module':
+      | 'module': % Module's structure is simple enough to not warrant a new rule
     .sModule
     pIdentifier .sIdentifier
     @DecsAndStmts 'end'
@@ -185,6 +191,12 @@ Declarations :
 
 HandleProcedure :
 		.sProcedure % procedure name
+
+    % If we read in the public asterisk
+    % emit the identifier then public semantic token before
+    % consuming the identifier
+    % For any other case (i.e not public)
+    % consume and then emit
     [
     | '*':
       .sIdentifier
@@ -193,7 +205,11 @@ HandleProcedure :
     | *:
       pIdentifier  .sIdentifier
     ]
+    % Handle the arguments to the procedure
 		@ProcedureHeading
+
+    % A procedure body is a series of delcarations followed by a series of statements
+    % Call the rule we have to deal with that
 		@DecsAndStmts
     'end';
 
@@ -203,8 +219,10 @@ Statements :
 	{[
 	    | pIdentifier:
 		@AssignmentOrCallStmt
-	    | 'begin':
-		@BeginStmt
+    % Begin isn't a part of our Garnet, so we can remove it
+    % Commented out for now
+	  %   | 'begin':
+		% @BeginStmt
 	    | 'if':
 		@IfStmt
 	    | 'while':
@@ -223,11 +241,12 @@ Statements :
 	]};
 
 ConstantDefinitions :
-	% Accept one or more named constant definitions
 	pIdentifier  .sIdentifier
 	@ConstantValue;
 
-  % In Garnet, a constant can only have ONE DEFINITION
+  % In Garnet, a constant can only have one definition
+  % No need to read in more
+
 	% {[
 	%     | pIdentifier:
 	% 	.sIdentifier
@@ -261,9 +280,12 @@ UnsignedIntegerConstant :
 	];
 
 TypeDefinitions :
-	% Accept one or more named type definitions.
 	pIdentifier  .sIdentifier
 	':'  @TypeBody;
+
+  % Again, like constants, only one definition
+  % No need to loop and read more
+
 	% {[
 	%     | pIdentifier:
 	% 	.sIdentifier
@@ -324,15 +346,22 @@ VariableDeclarations :
 
   @OptVarDecl
 
-	':'  @TypeBody
-	{[
-	    | pIdentifier:
-		.sIdentifier
-		':'  @TypeBody
-	    | *:
-		>
-	]};
+  % We want to read in multiple variables
+  % But only they should have only one type
+  % e.g. something like var a,b : string : integer is invalid
+  % So read the typebody and exit
 
+	':'  @TypeBody;
+	% {[
+	%     | pIdentifier:
+	% 	.sIdentifier
+	% 	':'  @TypeBody
+	%     | *:
+	% 	>
+	% ]};
+
+  % New rule to read in multiple comma separated declarations
+  % e.g. a,b,c... etc
 OptVarDecl :
   [{
     | ',':
@@ -346,9 +375,17 @@ OptVarDecl :
 
 ProcedureHeading :
 	% Accept zero or more procedure formal parameter declarations.
+  % In Garnet, an empty procedure heading must have a set of
+  % empty parenthesis. Unlike PT where they're optional
+  % So the bulk of logic goes under the '(' case
+  % if we see anything other than the left parenthesis, don't do anything
   [
     | '(':
 		{
+      % This matching rule handles the argument identifier (before the type is specified)
+      % The 'var' keyword is optional, if we see it, emit sVar
+      % but if don't see it or the closing parenthesis, consume the identifier token
+      % and emit sIdentifier
       [
         | 'var':
           pIdentifier .sIdentifier
@@ -359,8 +396,17 @@ ProcedureHeading :
         | *:
           pIdentifier .sIdentifier
       ]
+      % The colon to distinguish between the identifier and type is not optional
       ':'
+
+      % Read in the type, also not optional. If we made it this far
+      % then there definitely must be a type
       pIdentifier .sIdentifier
+
+      % We can read in one or more arguments. If we see a comma, consume it and do nothing
+      % which will return is back up to the top of the loop and we can read in more arguments
+      % A closing parenthesis will emit sParmEnd and return
+      % Anything else and exit
       [
         | ',':
         | ')':
@@ -456,12 +502,31 @@ BeginStmt :
 	};
 
 IfStmt :
+  % The heading is pretty straightforward
+  % Read in the expression, emit the tokens
+  % and do the same for 'then'
 	.sIfStmt
 	@Expression
 	.sExpnEnd
 	'then'  .sThen
 
+
+  % The body of our if statement is a sequence of statements
+  % Call the rule we have to take care of it
   @Statements
+
+  % After the sequence of statements, what we do next is dependent
+  % on the next keyword. If we see an elsif, emit the sElse and
+  % recursively call IfStmt while nesting it in sBegin and sEnd
+  % this way, we translate an elseif to its equivalent if + else form
+
+  % If we see an 'else' emit the sElse token and read in its body,
+  % which is a series of statements. There is only one else clause
+  % per if statement, so after the statements are done we can read
+  % the ending 'end' keyword and exit
+
+  % If our if statement has no elsifs or elses, then we expect an
+  % 'end' keyword and exit
   [
     | 'elsif':
       .sElse
@@ -473,29 +538,11 @@ IfStmt :
       @Statements
       'end'
       >
-      % [
-      %   | 'end':
-      %   >
-      % ]
     | 'end':
       >
   ];
 
-	% {
-	%     @Statement
-	%     [
-  %   | ';':
-  %   | 'else':
-  %   .sEnd
-  %   .sElse
-  %   .sBegin
-  %   @Statement
-  %   | 'end':
-  %   .sEnd
-	% 	    >
-	%     ]
-	% };
-
+  % Original body
 	% @Statement
 	% [
 	%     | 'else':
@@ -507,39 +554,69 @@ IfStmt :
 
 % Same as IfStmt except .sNot emitted after @Expression
 UnlessStmt :
+   % An unless statement is equivalent to if not
+   % So the first few statements are the same as @IfStmt
+   % Except we output sNot after @Expression
 	.sIfStmt
 	@Expression
   .sNot
 	.sExpnEnd
 	'then'  .sThen
 
+  % Same as if, our unless body is 0 or more statements
   @Statements
+
+  % Unlike if statements, an unless can only contain an
+  % optional else block, which we handle in the following
+  % if we see an else, emit sElse and read in the statements
+  % otherwise on 'end', pass through and terminate
   [
     | 'else':
     .sElse
     @Statements
+    'end'
     | 'end':
-    >
   ];
 
 CaseStmt :
+  % Emit the tokens and read in an expression
 	.sCaseStmt
 	@Expression
 	.sExpnEnd
 
-  'when'
-  @CaseAlt
-  {[
+  % Read in the first 'when' and call CaseAlt which
+  % parses one or more comma separated constants
+  % There can be 0 or more 'when' clauses in Garnet
+  % so only proceed if we actually see one
+  [
     | 'when':
       @CaseAlt
+    | *:
+  ]
+
+  % Calling CaseAlt handles the 'then' keyword
+  % and it also calls @Statements to read in the sequence of statements
+  % If we reach here, then we've already read in the statements
+  % and must decide on what to do next
+
+  {[
+    % If we see another 'when', call @CaseAlt again
+    | 'when':
+      @CaseAlt
+    % If we see an else, read in the statements that belong in that block
     | 'else':
       .sElse
       @Statements
+    % If we see the 'end' keyword, then we're done with the case statement
+    % and we can emit sCaseEnd and exit
     | 'end':
       .sCaseEnd
       >
+    | *:
+      >
   ]};
 
+  % Original body
 	% @CaseAlternative
 	% {[
 	%     | ';':

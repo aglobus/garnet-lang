@@ -9,3 +9,16 @@ case i
     else
     x = 99
 end
+
+%Empty case
+case x
+end
+
+
+%Incorrect (missing then)
+case i 
+	when 12 
+		x = 2
+	else
+		y = 3
+end

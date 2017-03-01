@@ -1,7 +1,7 @@
 using output, output2, output3
 val c = 27 % declaration
-var : string % declaration
+var x : string % declaration
 ; % should be ignored
 c = 14 % statement
 ; % should also be ignored 
-;;
+;

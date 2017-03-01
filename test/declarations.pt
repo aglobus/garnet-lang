@@ -1,11 +1,13 @@
 using output
-val c = 27        %Correct
-val q = 14        %Correct
-var v : string    %Correct
-type t : integer  %Correct
-type u : someType
-var a,b,c : integer
+val c = 27 		% Correct
+val q = 14 		% Correct
+val q = hello 		% Correct
 
-%type t : val c = 4 %Incorrect
-%val a,b,c = 5       %Incorrect
-%type t, q : integer %Incorrect
+var v : string 		% Correct
+var v : nonsense	% Correct
+
+type t : integer 	% Correct
+type t : nonsense 	% Correct
+
+var a,b,c : integer 	% Correct
+type t : val c = 4 	% Incorrect
