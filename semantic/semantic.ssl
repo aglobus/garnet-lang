@@ -102,21 +102,21 @@ Output :	% corresponds to coder.ssl input
 	tVarParm
 	tFetchAddress
 	tFetchInteger
-	tFetchChar
+	tFetchString
 	tFetchBoolean
 	tAssignBegin
 	tAssignAddress
 	tAssignInteger
-	tAssignChar
+	tAssignString
 	tAssignBoolean
 	tStoreParmAddress
 	tStoreParmInteger
-	tStoreParmChar
+	tStoreParmString
 	tStoreParmBoolean
 	tSubscriptBegin
 	tSubscriptAddress
 	tSubscriptInteger
-	tSubscriptChar
+	tSubscriptString
 	tSubscriptBoolean
 	tArrayDescriptor
 	tFileDescriptor
@@ -139,7 +139,6 @@ Output :	% corresponds to coder.ssl input
 	tLiteralAddress
 	firstCompoundOutputToken = tLiteralAddress
 	tLiteralInteger
-	tLiteralChar
 	tLiteralBoolean
 	tLiteralString
 	tStringDescriptor
