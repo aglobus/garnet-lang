@@ -123,7 +123,6 @@ Output :	% corresponds to coder.ssl input
 	tIfBegin
 	tIfEnd
 	tCaseBegin
-	tWhileBegin
 	tRepeatBegin
 	tRepeatControl
 	tCallBegin
@@ -153,8 +152,6 @@ Output :	% corresponds to coder.ssl input
 	tCaseSelect
 	tCaseMerge
 	tCaseEnd
-	tWhileTest
-	tWhileEnd
 	tRepeatTest
 	tSkipProc
 	tCallEnd
