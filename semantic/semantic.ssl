@@ -187,7 +187,7 @@ Error :
 	eTypeIdentifierReqd
 	eIntegerExpnReqd
 	eBooleanExpnReqd
-	eCharExpnReqd
+	eStringExpnReqd
 	eArrayVarReqd
 	eVariableReqd
 	eDuplicateLabel
@@ -197,7 +197,7 @@ Error :
 	eInputNotVisible
 	eOutputNotVisible
 	eFieldWidth
-	eCharFileVarReqd
+	eStringFileVarReqd
 	eWriteExpn
 	eReadVar
 	lastSslErrorCode = eReadVar;
@@ -229,7 +229,7 @@ type PredeclaredId :
 
 	firstPredeclaredType = firstPredeclaredId
 	pidInteger = firstPredeclaredType
-	pidChar
+	pidString
 	pidBoolean
 	pidText
 	lastPredeclaredType = pidText
@@ -257,7 +257,7 @@ type PredeclaredId :
 
 type StdType :
 	stdInteger
-	stdChar
+	stdString
 	stdBoolean
 	stdText;
 
@@ -442,7 +442,7 @@ mechanism TypeTable :
 
 type TypeKind :
 	tpInteger
-	tpChar
+	tpString
 	tpBoolean
 	tpSubrange
 	tpArray
@@ -557,9 +557,9 @@ type TrapKind :
 	trWriteln = 6
 	trWriteString = 7
 	trWriteInteger = 8
-	trWriteChar = 9
+	trWriteString = 9
 	trReadInteger = 10
-	trReadChar = 11
+	trReadString = 11
 	trAssign = 12;
 
 
@@ -915,9 +915,9 @@ ConstantValue :		% An identifier token has just been accepted
 		[ oValueChoose
 		    | zero:
 			#eNullString
-			@SymbolStkPushCharConstant
+			@SymbolStkPushStringConstant
 		    | one:
-			oSymbolStkLinkToStandardType(stdChar)
+			oSymbolStkLinkToStandardType(stdString)
 			oSymbolStkEnterStringValue
 		    | *:
 			% Emit a branch around the string since
@@ -934,7 +934,7 @@ ConstantValue :		% An identifier token has just been accepted
 			oFixPopForwardBranch
 			oTypeStkPush(tpPackedArray)	% means literal string
 			oTypeStkEnterBounds
-			oTypeStkLinkToStandardComponentType(stdChar)
+			oTypeStkLinkToStandardComponentType(stdString)
 			oTypeTblEnter
 			oSymbolStkEnterTypeReference
 			oTypeStkPop
@@ -1335,7 +1335,7 @@ AllocateVar :
 			oAllocateAlignOnWord
 			oSymbolStkEnterDataAddress
 			oAllocateVariable
-		    | tpChar, tpBoolean:
+		    | tpString, tpBoolean:
 			oSymbolStkEnterDataAddress
 			oAllocateVariable
 		    | tpArray:
@@ -1509,8 +1509,8 @@ ProcedurePrologue :
 			[ oTypeStkChooseKind
 			    | tpInteger, tpSubrange:
 				.tStoreParmInteger
-			    | tpChar:
-				.tStoreParmChar
+			    | tpString:
+				.tStoreParmString
 			    | tpBoolean:
 				.tStoreParmBoolean
 			]
@@ -1569,8 +1569,8 @@ AssignmentStmt :
 	[ oTypeStkChooseKind
 	    | tpInteger, tpSubrange, tpFile:
 		.tAssignInteger
-	    | tpChar:
-		.tAssignChar
+	    | tpString:
+		.tAssignString
 	    | tpBoolean:
 		.tAssignBoolean
 	    | *:		% error flagged above
@@ -1706,7 +1706,7 @@ VariableActual :
 			#eParameterTypeMismatch
 		]
 		[ oTypeStkChooseKind
-		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+		    | tpInteger, tpSubrange, tpString, tpBoolean:
 			% Subscripted packed array variables are
 			% illegal as variable actual parameters
 			[ oTypeStkChoosePackedComponentFlag
@@ -1923,11 +1923,11 @@ Operand :
 		    | zero:
 			#eNullString
 			oSymbolStkPush(syExpression)
-			oTypeStkPush(tpChar)
+			oTypeStkPush(tpString)
 		    | one:
 			oSymbolStkPush(syExpression)
-			oTypeStkPush(tpChar)
-			.tLiteralChar
+			oTypeStkPush(tpString)
+			.tLiteralString
 			oEmitString
 		    | *:
 			oSymbolStkPush(syExpression)
@@ -1948,7 +1948,7 @@ Operand :
 			oFixPopTargetAddress
 			oTypeStkPush(tpPackedArray)
 			oTypeStkEnterBounds
-			oTypeStkLinkToStandardComponentType(stdChar)
+			oTypeStkLinkToStandardComponentType(stdString)
 		]
 		oValuePop
 		oValuePop
@@ -2046,10 +2046,10 @@ CompareAndSwapTypes :
 		    | *:
 			#eTypeMismatch
 		]
-	    | tpChar:
+	    | tpString:
 		oTypeStkSwap
 		[ oTypeStkChooseKind
-		    | tpChar:
+		    | tpString:
 		    | *:
 			#eTypeMismatch
 		]
@@ -2110,10 +2110,10 @@ CompareRelationalOperandTypes :
 		    | *:
 			#eOperandOperatorTypeMismatch
 		]
-	    | tpChar:
+	    | tpString:
 		oTypeStkPop
 		[ oTypeStkChooseKind
-		    | tpChar:
+		    | tpString:
 		    | *:
 			#eOperandOperatorTypeMismatch
 		]
@@ -2188,14 +2188,14 @@ VariableExtension :
 		[ oTypeStkChooseKind
 		    | tpInteger, tpSubrange:
 			.tSubscriptInteger
-		    | tpChar:
-			.tSubscriptChar
+		    | tpString:
+			.tSubscriptString
 		    | tpBoolean:
 			.tSubscriptBoolean
 		]
 	    | *:
 		[ oTypeStkChooseKind
-		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+		    | tpInteger, tpSubrange, tpString, tpBoolean:
 			oTypeStkSetPackedComponentFlag(no)
 		    | *:
 		]
@@ -2208,8 +2208,8 @@ ConstantOperand :
 	[ oTypeStkChooseKind
 	    | tpInteger, tpSubrange:
 		.tLiteralInteger
-	    | tpChar:
-		.tLiteralChar
+	    | tpString:
+		.tLiteralString
 	    | tpBoolean:
 		.tLiteralBoolean
 	    | tpPackedArray:	% always a named literal string
@@ -2227,8 +2227,8 @@ VariableOperand :
 	[ oTypeStkChooseKind
 	    | tpInteger, tpSubrange, tpFile:
 		.tFetchInteger		% replace address with value
-	    | tpChar:
-		.tFetchChar
+	    | tpString:
+		.tFetchString
 	    | tpBoolean:
 		.tFetchBoolean
 	    % The caller is responsible for detecting illegal situations
@@ -2263,15 +2263,15 @@ FunctionOperand :
 		oSymbolStkPop	% Chr symbol
 		oTypeStkPop
 		oSymbolStkPush(syExpression)
-		oTypeStkPush(tpChar)
+		oTypeStkPush(tpString)
 	    | rtOrd:
 		[
 		    | sParmBegin:
 			@Expression
 			[ oTypeStkChooseKind
-			    | tpChar:
+			    | tpString:
 			    | *:
-				#eCharExpnReqd
+				#eStringExpnReqd
 			]
 			sParmEnd
 			oSymbolStkPop	% Parameter expression
@@ -2455,7 +2455,7 @@ AssignProcedure :
 				oValuePush(one)
 				oEmitValue
 				oValuePop
-				.tSubscriptChar
+				.tSubscriptString
 				.tVarParm
 			    | *:
 			]
@@ -2463,7 +2463,7 @@ AssignProcedure :
 			    | tpArray, tpPackedArray:	% must be a char array or literal string	
 				oTypeStkPushComponent
 				[ oTypeStkChooseKind
-				    | tpChar:
+				    | tpString:
 				    | *:
 					#eFileNameReqd
 				]
@@ -2526,7 +2526,7 @@ WriteProcedure :
 				oTypeStkPushComponent
 				oValuePushSymbol	% file descriptor
 				[ oTypeStkChooseKind
-				    | tpChar:
+				    | tpString:
 					{
 					    .tTrapBegin
 					    .tLiteralAddress
@@ -2546,12 +2546,12 @@ WriteProcedure :
 						    oValuePush(one)
 						    oEmitValue
 						    oValuePop
-						    .tSubscriptChar
+						    .tSubscriptString
 						    .tVarParm
 						| *:
 					    ]
 					    .tParmEnd
-					    @WriteChar
+					    @WriteString
 					    [
 						| sParmEnd:
 						    >
@@ -2572,7 +2572,7 @@ WriteProcedure :
 					    .tParmEnd
 					    @Expression
 					    .tParmEnd
-					    @WriteNonChar
+					    @WriteNonString
 					    [
 						| sParmEnd:
 						    >
@@ -2637,12 +2637,12 @@ WriteProcedure :
 				oValuePush(one)
 				oEmitValue
 				oValuePop
-				.tSubscriptChar
+				.tSubscriptString
 				.tVarParm
 			    | *:
 			]
 			.tParmEnd
-			@WriteChar
+			@WriteString
 			@WriteStandardExpnList
 		]
 	    | sParmEnd:
@@ -2679,16 +2679,16 @@ WriteStandardExpnList :
 			oValuePush(one)
 			oEmitValue
 			oValuePop
-			.tSubscriptChar
+			.tSubscriptString
 			.tVarParm
 		    | *:
 		]
 		.tParmEnd
-		@WriteChar
+		@WriteString
 	]}
 	oValuePop;
 
-WriteChar :
+WriteString :
 	% Accept an optional field width specification, supplying
 	% a default field width if none is specified.  Verify that
 	% the expression to be written is of legal type.  The
@@ -2713,7 +2713,7 @@ WriteChar :
 		[ oTypeStkChooseKind	% of expression being written
 		    | tpInteger, tpSubrange:
 			oValuePush(ten)
-		    | tpChar:
+		    | tpString:
 			oValuePush(one)
 		    | tpPackedArray:	% a literal string
 			oValuePushTypeStkUpperBound
@@ -2726,16 +2726,16 @@ WriteChar :
 		.tParmEnd
 	]
 	[ oTypeStkChooseKind
-	    | tpChar:
+	    | tpString:
 		.tTrap
-		oEmitTrapKind(trWriteChar)
+		oEmitTrapKind(trWriteString)
 	    | tpInteger, tpSubrange:
 		.tTrap
 		oEmitTrapKind(trWriteInteger)
 	    | tpArray, tpPackedArray:	% must be a char array or literal string
 		oTypeStkPushComponent
 		[ oTypeStkChooseKind
-		    | tpChar:
+		    | tpString:
 		    | *:
 			#eWriteExpn
 		]
@@ -2755,7 +2755,7 @@ WriteChar :
 	oSymbolStkPop
 	oTypeStkPop;
 
-WriteNonChar :
+WriteNonString :
 	% Check that the expression to be written matches the file type.
 	% The symbol and type stacks contain entries for the file
 	% variable and the expression to be written (expression on top).
@@ -2836,32 +2836,32 @@ WritelnProcedure :
 				oTypeStkPushComponent
 				% writeln applies only to text files
 				[ oTypeStkChooseKind
-				    | tpChar:
+				    | tpString:
 					% There should not be more parameters
 					[
 					    | sExpnEnd:
 						[
 						    | sParmEnd:
 						    | *:
-							#eCharFileVarReqd
+							#eStringFileVarReqd
 							@FlushActuals
 						]
 					    | *:
-						#eCharFileVarReqd
+						#eStringFileVarReqd
 						@FlushActuals
 					]
 				    | *:
-					#eCharFileVarReqd
+					#eStringFileVarReqd
 					@FlushActuals
 				]
 				oValuePop
 				oTypeStkPop
 			    | *:
-				#eCharFileVarReqd
+				#eStringFileVarReqd
 				@FlushActuals
 			]
 		    | *:
-			#eCharFileVarReqd
+			#eStringFileVarReqd
 			@FlushActuals
 		]
 		oTypeStkPop
@@ -2869,7 +2869,7 @@ WritelnProcedure :
 		.tVarParm
 		.tParmEnd
 	    | *:
-		#eCharFileVarReqd
+		#eStringFileVarReqd
 		@FlushActuals
 	];
 
@@ -2904,10 +2904,10 @@ ReadProcedure :
 				oValuePushSymbol	% file descriptor
 				oTypeStkPushComponent
 				[ oTypeStkChooseKind
-				    | tpChar:
-					@ReadCharParameterList
+				    | tpString:
+					@ReadStringParameterList
 				    | *:
-					@ReadNonCharParameterList
+					@ReadNonStringParameterList
 				]
 				oValuePop
 				oTypeStkPop
@@ -2945,13 +2945,13 @@ ReadProcedure :
 			]
 			.tVarParm
 			.tParmEnd
-			@ReadChar
+			@ReadString
 			% .tPopStack
 			% .tParmEnd
 			[
 			    | sParmEnd:
 			    | *:
-				@ReadCharParameterList
+				@ReadStringParameterList
 			]
 			oValuePop
 		]
@@ -2961,7 +2961,7 @@ ReadProcedure :
 	]
 	.tReadEnd;
 
-ReadCharParameterList :
+ReadStringParameterList :
 	% Accept a list of actual parameter variables to be
 	% read from a file of characters.
 
@@ -2983,7 +2983,7 @@ ReadCharParameterList :
 		]
 		.tVarParm
 		.tParmEnd
-		@ReadChar
+		@ReadString
 		[ oSymbolStkChooseKind	% File symbol kind
 		    | syVarParameter:
 			.tFetchAddress
@@ -3002,7 +3002,7 @@ ReadCharParameterList :
 		>
 	]};
 
-ReadNonCharParameterList :
+ReadNonStringParameterList :
 	% Accept a list of actual parameter variables to be
 	% read from a non-text file.
 
@@ -3024,7 +3024,7 @@ ReadNonCharParameterList :
 		]
 		.tVarParm
 		.tParmEnd
-		@ReadNonChar
+		@ReadNonString
 		[ oSymbolStkChooseKind	% File symbol kind
 		    | syVarParameter:
 			.tFetchAddress
@@ -3043,11 +3043,11 @@ ReadNonCharParameterList :
 		>
 	]};
 
-ReadChar :
+ReadString :
 	[ oTypeStkChooseKind
-	    | tpChar:
+	    | tpString:
 		.tTrap
-		oEmitTrapKind(trReadChar)
+		oEmitTrapKind(trReadString)
 	    | tpInteger, tpSubrange:
 		.tTrap
 		oEmitTrapKind(trReadInteger)
@@ -3057,7 +3057,7 @@ ReadChar :
 	oSymbolStkPop	% variable being read
 	oTypeStkPop;
 
-ReadNonChar :
+ReadNonString :
 	[ oTypeStkChooseKind
 	    | tpInteger, tpSubrange:
 		oTypeStkPop
@@ -3124,31 +3124,31 @@ ReadlnProcedure :
 				oTypeStkPushComponent
 				% readln applies only to text files
 				[ oTypeStkChooseKind
-				    | tpChar:
+				    | tpString:
 					% There should not be more parameters
 					[
 					    | sExpnEnd:
 						[
 						    | sParmEnd:
 						    | *:
-							#eCharFileVarReqd
+							#eStringFileVarReqd
 							@FlushActuals
 						]
 					    | *:
-						#eCharFileVarReqd
+						#eStringFileVarReqd
 						@FlushActuals
 					]
 				    | *:
-					#eCharFileVarReqd
+					#eStringFileVarReqd
 					@FlushActuals
 				]
 				oTypeStkPop
 			    | *:
-				#eCharFileVarReqd
+				#eStringFileVarReqd
 				@FlushActuals
 			]
 		    | *:
-			#eCharFileVarReqd
+			#eStringFileVarReqd
 			@FlushActuals
 		]
 		oTypeStkPop
@@ -3156,7 +3156,7 @@ ReadlnProcedure :
 		.tVarParm
 		.tParmEnd
 	    | *:
-		#eCharFileVarReqd
+		#eStringFileVarReqd
 		@FlushActuals
 	];
 
@@ -3209,12 +3209,12 @@ SymbolStkPushIntegerConstant :
 	oSymbolStkLinkToStandardType(stdInteger);
 
 
-SymbolStkPushCharConstant :
+SymbolStkPushStringConstant :
 	oSymbolStkPush(syConstant)
 	oValuePush(zero)
 	oSymbolStkEnterValue
 	oValuePop
-	oSymbolStkLinkToStandardType(stdChar);
+	oSymbolStkLinkToStandardType(stdString);
 
 
 SymbolStkPushIntegerType :
