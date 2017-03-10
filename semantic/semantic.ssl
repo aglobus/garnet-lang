@@ -136,6 +136,11 @@ Output :	% corresponds to coder.ssl input
 	tReadEnd
 
 	% Compound T-codes are those that take operands
+  tConcatenate
+  tSubstring
+  tLength
+  tIndex
+  tStringEqual
 	tLiteralAddress
 	firstCompoundOutputToken = tLiteralAddress
 	tLiteralInteger
