@@ -214,6 +214,8 @@ type Integer :
 	three = 3
 	ten = 10
 
+  stringSize = 1024
+
 	% These two sizes are machine dependent
 	byteSize = 1
 	wordSize = 4;
