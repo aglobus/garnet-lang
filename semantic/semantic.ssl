@@ -123,8 +123,8 @@ Output :	% corresponds to coder.ssl input
 	tIfBegin
 	tIfEnd
 	tCaseBegin
-	tRepeatBegin
-	tRepeatControl
+	tDoBegin
+  tDoEnd
 	tCallBegin
 	tParmEnd
 	tProcedureEnd
@@ -152,7 +152,8 @@ Output :	% corresponds to coder.ssl input
 	tCaseSelect
 	tCaseMerge
 	tCaseEnd
-	tRepeatTest
+	tDoTest
+  tDoBreakIf
 	tSkipProc
 	tCallEnd
 	tLineNumber
@@ -1767,7 +1768,7 @@ WhileStmt :
 	oFixPopForwardBranch;
 
 RepeatStmt :
-	.tRepeatBegin
+	.tDoBegin
 	oFixPushTargetAddress		% top-of-loop branch target
 	{[
 	    | sRepeatEnd:
@@ -1777,7 +1778,7 @@ RepeatStmt :
 	]}
 	.tRepeatControl
 	@BooleanControlExpression
-	.tRepeatTest
+	.tDoTest
 	oFixPopTargetAddress;
 
 CaseStmt :
