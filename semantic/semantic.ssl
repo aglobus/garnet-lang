@@ -152,6 +152,7 @@ Output :	% corresponds to coder.ssl input
 	tCaseSelect
 	tCaseMerge
 	tCaseEnd
+  tCaseElse
 	tDoTest
   tDoBreakIf
 	tSkipProc
