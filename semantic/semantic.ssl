@@ -314,6 +314,7 @@ mechanism SymbolTable :
 % Symbol Stack types and mechanism
 
 type SymbolKind :
+  syModule
 	syConstant
 	syType
 	syVariable
