@@ -279,6 +279,10 @@ mechanism SymbolTable :
     % (e.g. variable, type), a value (e.g. constant value, variable
     % address) and a link to the symbol's type table entry.
 
+    oSymbolTblStripScope
+
+    oSymbolTblMergeScope
+
     oSymbolTblEnter
 	% Make a new symbol table entry with the attributes
 	% of the top symbol in the symbol stack.
