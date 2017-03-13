@@ -142,7 +142,6 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 
 	{ Input Tokens }
 	sIdentifier = 0;
-	firstInputToken = 0;
 	firstSemanticToken = 0;
 	firstCompoundSemanticToken = 0;
 	sInteger = 1;
@@ -175,27 +174,31 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	sThen = 27;
 	sElse = 28;
 	sWhileStmt = 29;
-	sRepeatStmt = 30;
-	sRepeatEnd = 31;
-	sEq = 32;
-	sNE = 33;
-	sLT = 34;
-	sLE = 35;
-	sGT = 36;
-	sGE = 37;
-	sAdd = 38;
-	sSubtract = 39;
-	sMultiply = 40;
-	sDivide = 41;
-	sModulus = 42;
-	sInfixOr = 43;
-	sOr = 44;
-	sInfixAnd = 45;
-	sAnd = 46;
-	sNot = 47;
-	sNewLine = 48;
-	sEndOfFile = 49;
-	lastInputToken = 49;
+	sPublic = 30;
+	sModule = 31;
+	sDoStmt = 32;
+	sBreakIf = 33;
+	sSubstring = 34;
+	sLength = 35;
+	sIndex = 36;
+	sEq = 37;
+	sNE = 38;
+	sLT = 39;
+	sLE = 40;
+	sGT = 41;
+	sGE = 42;
+	sAdd = 43;
+	sSubtract = 44;
+	sMultiply = 45;
+	sDivide = 46;
+	sModulus = 47;
+	sInfixOr = 48;
+	sOr = 49;
+	sInfixAnd = 50;
+	sAnd = 51;
+	sNot = 52;
+	sNewLine = 53;
+	lastSemanticToken = 53;
 
 	{ Output Tokens }
 	tMultiply = 0;
@@ -223,61 +226,65 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	tVarParm = 21;
 	tFetchAddress = 22;
 	tFetchInteger = 23;
-	tFetchChar = 24;
+	tFetchString = 24;
 	tFetchBoolean = 25;
 	tAssignBegin = 26;
 	tAssignAddress = 27;
 	tAssignInteger = 28;
-	tAssignChar = 29;
+	tAssignString = 29;
 	tAssignBoolean = 30;
 	tStoreParmAddress = 31;
 	tStoreParmInteger = 32;
-	tStoreParmChar = 33;
+	tStoreParmString = 33;
 	tStoreParmBoolean = 34;
 	tSubscriptBegin = 35;
 	tSubscriptAddress = 36;
 	tSubscriptInteger = 37;
-	tSubscriptChar = 38;
+	tSubscriptString = 38;
 	tSubscriptBoolean = 39;
 	tArrayDescriptor = 40;
 	tFileDescriptor = 41;
 	tIfBegin = 42;
 	tIfEnd = 43;
 	tCaseBegin = 44;
-	tWhileBegin = 45;
-	tRepeatBegin = 46;
-	tRepeatControl = 47;
-	tCallBegin = 48;
-	tParmEnd = 49;
-	tProcedureEnd = 50;
-	tWriteBegin = 51;
-	tReadBegin = 52;
-	tTrapBegin = 53;
-	tWriteEnd = 54;
-	tReadEnd = 55;
-	tLiteralAddress = 56;
-	firstCompoundOutputToken = 56;
-	tLiteralInteger = 57;
-	tLiteralChar = 58;
-	tLiteralBoolean = 59;
-	tLiteralString = 60;
-	tStringDescriptor = 61;
-	tSkipString = 62;
-	tIfThen = 63;
-	tIfMerge = 64;
-	tCaseSelect = 65;
-	tCaseMerge = 66;
-	tCaseEnd = 67;
-	tWhileTest = 68;
-	tWhileEnd = 69;
-	tRepeatTest = 70;
-	tSkipProc = 71;
-	tCallEnd = 72;
-	tLineNumber = 73;
-	tTrap = 74;
-	lastCompoundOutputToken = 74;
-	tEndOfFile = 75;
-	lastOutputToken = 75;
+	tDoBegin = 45;
+	tDoEnd = 46;
+	tCallBegin = 47;
+	tParmEnd = 48;
+	tProcedureEnd = 49;
+	tWriteBegin = 50;
+	tReadBegin = 51;
+	tTrapBegin = 52;
+	tWriteEnd = 53;
+	tReadEnd = 54;
+	tLiteralAddress = 55;
+	firstCompoundOutputToken = 55;
+	tLiteralInteger = 56;
+	tLiteralString = 57;
+	tLiteralBoolean = 58;
+	tStringDescriptor = 59;
+	tSkipString = 60;
+	tConcatenate = 61;
+	tSubstring = 62;
+	tLength = 63;
+	tIndex = 64;
+	tStringEqual = 65;
+	tIfThen = 66;
+	tIfMerge = 67;
+	tCaseSelect = 68;
+	tCaseMerge = 69;
+	tCaseEnd = 70;
+	tDoBreakIf = 71;
+	tDoTest = 72;
+	tCaseElse = 73;
+	tRepeatTest = 74;
+	tSkipProc = 75;
+	tCallEnd = 76;
+	tLineNumber = 77;
+	tTrap = 78;
+	lastCompoundOutputToken = 78;
+	tEndOfFile = 79;
+	lastOutputToken = 79;
 
 	{ Input/Output Tokens }
 
@@ -308,7 +315,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	eTypeIdentifierReqd = 32;
 	eIntegerExpnReqd = 33;
 	eBooleanExpnReqd = 34;
-	eCharExpnReqd = 35;
+	eStringExpnReqd = 35;
 	eArrayVarReqd = 36;
 	eVariableReqd = 37;
 	eDuplicateLabel = 38;
@@ -318,7 +325,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	eInputNotVisible = 42;
 	eOutputNotVisible = 43;
 	eFieldWidth = 44;
-	eCharFileVarReqd = 45;
+	eStringFileVarReqd = 45;
 	eWriteExpn = 46;
 	eReadVar = 47;
 	lastSslErrorCode = 47;
@@ -330,6 +337,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	two = 2;
 	three = 3;
 	ten = 10;
+	stringSize = 1024;
 	byteSize = 1;
 	wordSize = 4;
 	{ Type 14 }
@@ -339,7 +347,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	firstPredeclaredId = 1;
 	firstPredeclaredType = 1;
 	pidInteger = 1;
-	pidChar = 2;
+	pidString = 2;
 	pidBoolean = 3;
 	pidText = 4;
 	lastPredeclaredType = 4;
@@ -363,7 +371,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	lastSpecialId = 19;
 	{ Type 16 }
 	stdInteger = 0;
-	stdChar = 1;
+	stdString = 1;
 	stdBoolean = 2;
 	stdText = 3;
 	{ Type 17 }
@@ -395,7 +403,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	stdNull = 2;
 	{ Type 20 }
 	tpInteger = 0;
-	tpChar = 1;
+	tpString = 1;
 	tpBoolean = 2;
 	tpSubrange = 3;
 	tpArray = 4;
@@ -412,9 +420,9 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	trWriteln = 6;
 	trWriteString = 7;
 	trWriteInteger = 8;
-	trWriteChar = 9;
+	trWriteString = 9;
 	trReadInteger = 10;
-	trReadChar = 11;
+	trReadString = 11;
 	trAssign = 12;
 
 	{ S/SL Rule Table Addresses } {
@@ -429,7 +437,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	BeginStmt = 1311;
 	ConstantValue = 151;
 	SymbolStkPushIntegerConstant = 4122;
-	SymbolStkPushCharConstant = 4134;
+	SymbolStkPushStringConstant = 4134;
 	TypeBody = 378;
 	IndexType = 455;
 	ComponentType = 501;
@@ -477,13 +485,13 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	CompareRelationalOperandTypes = 2256;
 	VariableExtension = 2348;
 	StandardFunctionActual = 2606;
-	WriteChar = 3289;
-	WriteNonChar = 3413;
+	WriteString = 3289;
+	WriteNonString = 3413;
 	WriteStandardExpnList = 3222;
-	ReadCharParameterList = 3739;
-	ReadNonCharParameterList = 3805;
-	ReadChar = 3871;
-	ReadNonChar = 3900;
+	ReadStringParameterList = 3739;
+	ReadNonStringParameterList = 3805;
+	ReadString = 3871;
+	ReadNonString = 3900;
 	}
 
 	{ S/SL Table Parameters }
@@ -809,7 +817,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 
 	{ Predefined type table entries }
 	standardIntegerTypeRef :  TypeTblReference;
-	standardCharTypeRef :  TypeTblReference;
+	standardStringTypeRef :  TypeTblReference;
 	standardBooleanTypeRef :  TypeTblReference;
 	standardTextTypeRef :  TypeTblReference;
 	
@@ -928,10 +936,10 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	    standardIntegerTypeRef := pidInteger;
 
 	    { char }
-	    symbolTblKind[pidChar] := syType;
-	    symbolTblTypeTblLink[pidChar] := pidChar;
-	    typeTblKind[pidChar] := tpChar;
-	    standardCharTypeRef := pidChar;
+	    symbolTblKind[pidString] := syType;
+	    symbolTblTypeTblLink[pidString] := pidString;
+	    typeTblKind[pidString] := tpString;
+	    standardStringTypeRef := pidString;
 
 	    { Boolean }
 	    symbolTblKind[pidBoolean] := syType;
@@ -943,7 +951,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	    symbolTblKind[pidText] := syType;
 	    symbolTblTypeTblLink[pidText] := pidText;
 	    typeTblKind[pidText] := tpFile;
-	    typeTblComponentLink[pidText] := standardCharTypeRef;
+	    typeTblComponentLink[pidText] := standardStringTypeRef;
 	    standardTextTypeRef := pidText;
 
 	    { true (1) }
@@ -1081,7 +1089,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 		    write('integer type expression required');
 		eBooleanExpnReqd:
 		    write('Boolean type expression required');
-		eCharExpnReqd:
+		eStringExpnReqd:
 		    write('char type expression required');
 		eArrayVarReqd:
 		    write('array variable required');
@@ -1103,7 +1111,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 		    write('invalid field width specification');
 		eWriteExpn:
 		    write('invalid write expression');
-		eCharFileVarReqd:
+		eStringFileVarReqd:
 		    write('text file required');
 		eReadVar:
 		    write('invalid read variable');
@@ -1874,9 +1882,9 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 			    stdInteger:
 				symbolStkTypeTblLink[symbolStkTop] :=
 					standardIntegerTypeRef;
-			    stdChar:
+			    stdString:
 				symbolStkTypeTblLink[symbolStkTop] :=
-					standardCharTypeRef;
+					standardStringTypeRef;
 			    stdBoolean:
 				symbolStkTypeTblLink[symbolStkTop] :=
 					standardBooleanTypeRef;
@@ -2048,9 +2056,9 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 				stdInteger:
 				    typeStkComponentLink[typeStkTop] :=
 					standardIntegerTypeRef;
-				stdChar:
+				stdString:
 				    typeStkComponentLink[typeStkTop] :=
-					standardCharTypeRef;
+					standardStringTypeRef;
 				stdBoolean:
 				    typeStkComponentLink[typeStkTop] :=
 					standardBooleanTypeRef;
@@ -2373,7 +2381,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 			case typeStkKind[typeStkTop] of
 			    tpInteger, tpSubrange:
 				dataAreaEnd := dataAreaEnd + wordSize;
-			    tpChar, tpBoolean:
+			    tpString, tpBoolean:
 				dataAreaEnd := dataAreaEnd + byteSize;
 			    tpArray, tpPackedArray:
 				begin

@@ -16,9 +16,7 @@
 %
 
 Input :
-
 	sIdentifier 
-	firstInputToken = sIdentifier
 	firstSemanticToken = sIdentifier
 	firstCompoundSemanticToken = sIdentifier
 	sInteger
@@ -76,8 +74,7 @@ Input :
 	sAnd
 	sNot
 	sNewLine
-	sEndOfFile
-	lastInputToken = sEndOfFile;
+	lastSemanticToken = sNewLine;
 
 Output :	% corresponds to coder.ssl input
 	tMultiply 
@@ -126,6 +123,7 @@ Output :	% corresponds to coder.ssl input
 	tIfBegin
 	tIfEnd
 	tCaseBegin
+	% tWhileBegin
 	tDoBegin
   tDoEnd
 	tCallBegin
@@ -138,26 +136,29 @@ Output :	% corresponds to coder.ssl input
 	tReadEnd
 
 	% Compound T-codes are those that take operands
+	tLiteralAddress
+	firstCompoundOutputToken = tLiteralAddress
+	tLiteralInteger
+	tLiteralString
+	tLiteralBoolean
+	tStringDescriptor
+	tSkipString
   tConcatenate
   tSubstring
   tLength
   tIndex
   tStringEqual
-	tLiteralAddress
-	firstCompoundOutputToken = tLiteralAddress
-	tLiteralInteger
-	tLiteralBoolean
-	tLiteralString
-	tStringDescriptor
-	tSkipString
 	tIfThen
 	tIfMerge
 	tCaseSelect
 	tCaseMerge
 	tCaseEnd
-  tCaseElse
-	tDoTest
+	% tWhileTest
+	% tWhileEnd
   tDoBreakIf
+  tDoTest
+  tCaseElse
+	tRepeatTest
 	tSkipProc
 	tCallEnd
 	tLineNumber
@@ -282,9 +283,8 @@ mechanism SymbolTable :
     % (e.g. variable, type), a value (e.g. constant value, variable
     % address) and a link to the symbol's type table entry.
 
-    oSymbolTblStripScope
-
-    oSymbolTblMergeScope
+    % oSymbolTblStripScope
+    % oSymbolTblMergeScope
 
     oSymbolTblEnter
 	% Make a new symbol table entry with the attributes
@@ -317,7 +317,6 @@ mechanism SymbolTable :
 % Symbol Stack types and mechanism
 
 type SymbolKind :
-  syModule
 	syConstant
 	syType
 	syVariable
@@ -569,10 +568,11 @@ type TrapKind :
 	trReadln = 4
 	trWrite = 5
 	trWriteln = 6
+	trWriteString = 7
 	trWriteInteger = 8
-	trWriteString = 109
+	trWriteString = 9
 	trReadInteger = 10
-	trReadString = 108
+	trReadString = 11
 	trAssign = 12;
 
 
@@ -1778,7 +1778,7 @@ WhileStmt :
 	oFixPopForwardBranch;
 
 RepeatStmt :
-	.tDoBegin
+	.tRepeatBegin
 	oFixPushTargetAddress		% top-of-loop branch target
 	{[
 	    | sRepeatEnd:
@@ -1788,7 +1788,7 @@ RepeatStmt :
 	]}
 	.tRepeatControl
 	@BooleanControlExpression
-	.tDoTest
+	.tRepeatTest
 	oFixPopTargetAddress;
 
 CaseStmt :
