@@ -1,3 +1,7 @@
-c324 325
-	syUndefined = 8;
+d364
+c366
+	trWriteString = 109;
+.
+c368
+	trReadString = 108;
 .

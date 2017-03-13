@@ -126,6 +126,7 @@ Output :	% corresponds to coder.ssl input
 	% tWhileBegin
 	tDoBegin
   tDoEnd
+	% tRepeatControl
 	tCallBegin
 	tParmEnd
 	tProcedureEnd
@@ -138,7 +139,13 @@ Output :	% corresponds to coder.ssl input
 	% Compound T-codes are those that take operands
 	tLiteralAddress
 	firstCompoundOutputToken = tLiteralAddress
+  tConcatenate
+  tSubstring
+  tLength
+  tIndex
+  tStringEqual
 	tLiteralInteger
+	tLiteralBoolean
 	tLiteralString
 	tLiteralBoolean
 	tStringDescriptor
@@ -155,10 +162,9 @@ Output :	% corresponds to coder.ssl input
 	tCaseEnd
 	% tWhileTest
 	% tWhileEnd
-  tDoBreakIf
+	tDoBreakIf
   tDoTest
   tCaseElse
-	tRepeatTest
 	tSkipProc
 	tCallEnd
 	tLineNumber
@@ -283,8 +289,8 @@ mechanism SymbolTable :
     % (e.g. variable, type), a value (e.g. constant value, variable
     % address) and a link to the symbol's type table entry.
 
-    % oSymbolTblStripScope
-    % oSymbolTblMergeScope
+    oSymbolTblStripScope
+    oSymbolTblMergeScope
 
     oSymbolTblEnter
 	% Make a new symbol table entry with the attributes
@@ -318,6 +324,8 @@ mechanism SymbolTable :
 
 type SymbolKind :
 	syConstant
+  syModule
+  syPublicProcedure
 	syType
 	syVariable
 	syVarParameter
@@ -568,11 +576,10 @@ type TrapKind :
 	trReadln = 4
 	trWrite = 5
 	trWriteln = 6
-	trWriteString = 7
 	trWriteInteger = 8
-	trWriteString = 9
+	trWriteString = 109
 	trReadInteger = 10
-	trReadString = 11
+	trReadString = 108
 	trAssign = 12;
 
 
@@ -1940,7 +1947,7 @@ Operand :
 		    | one:
 			oSymbolStkPush(syExpression)
 			oTypeStkPush(tpString)
-			.tLiteralString
+			.tLiteralChar
 			oEmitString
 		    | *:
 			oSymbolStkPush(syExpression)
@@ -2222,7 +2229,7 @@ ConstantOperand :
 	    | tpInteger, tpSubrange:
 		.tLiteralInteger
 	    | tpString:
-		.tLiteralString
+		.tLiteralChar
 	    | tpBoolean:
 		.tLiteralBoolean
 	    | tpPackedArray:	% always a named literal string
@@ -2918,7 +2925,7 @@ ReadProcedure :
 				oTypeStkPushComponent
 				[ oTypeStkChooseKind
 				    | tpString:
-					@ReadStringParameterList
+					@ReadCharParameterList
 				    | *:
 					@ReadNonStringParameterList
 				]
