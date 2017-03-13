@@ -1,7 +1,28 @@
-d364
-c366
-	trWriteString = 109;
+c141 142
+	lastSemanticToken = 53;
 .
-c368
-	trReadString = 108;
+c211 227
+	tLiteralBoolean = 64;
+	tStringDescriptor = 65;
+	tSkipString = 66;
+	tConcatenate = 67;
+	tSubstring = 68;
+	tLength = 69;
+	tIndex = 70;
+	tStringEqual = 71;
+	tIfThen = 72;
+	tIfMerge = 73;
+	tCaseSelect = 74;
+	tCaseMerge = 75;
+	tCaseEnd = 76;
+	tDoBreakIf = 77;
+	tDoTest = 78;
+	tCaseElse = 79;
+	tSkipProc = 80;
+	tCallEnd = 81;
+	tLineNumber = 82;
+	tTrap = 83;
+	lastCompoundOutputToken = 83;
+	tEndOfFile = 84;
+	lastOutputToken = 84;
 .

@@ -852,6 +852,8 @@ Block :
 	% definitions with the intent of providing better error repair.
 
 	{[
+      | sModule:
+    @ModuleDefinition
 	    | sProcedure:
 		@ProcedureDefinition
 	    | sConst:
@@ -865,6 +867,9 @@ Block :
 	]}
 	sBegin
 	@BeginStmt;
+
+ModuleDefinition :
+;
 
 ConstantDefinitions :		% Process named constant definitions
 	{[
