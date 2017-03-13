@@ -16,7 +16,9 @@
 %
 
 Input :
+
 	sIdentifier 
+	firstInputToken = sIdentifier
 	firstSemanticToken = sIdentifier
 	firstCompoundSemanticToken = sIdentifier
 	sInteger
@@ -74,7 +76,8 @@ Input :
 	sAnd
 	sNot
 	sNewLine
-	lastSemanticToken = sNewLine;
+	sEndOfFile
+	lastInputToken = sEndOfFile;
 
 Output :	% corresponds to coder.ssl input
 	tMultiply 
