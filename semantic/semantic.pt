@@ -1645,6 +1645,14 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 		      *  *  Symbol Table Mechanism Operations
 		      **** }
 
+        oSymbolTblStripScope:
+        begin
+        end;
+
+        oSymbolTblMergeScope:
+        begin
+        end;
+
 		    oSymbolTblEnter:
 			{ Create a symbol table entry with the attributes
 			  of the top symbol stack entry and link it to the
