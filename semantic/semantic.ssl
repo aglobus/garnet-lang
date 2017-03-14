@@ -852,8 +852,6 @@ Block :
 	% definitions with the intent of providing better error repair.
 
 	{[
-      | sModule:
-    @ModuleDefinition
 	    | sProcedure:
 		@ProcedureDefinition
 	    | sConst:
@@ -862,28 +860,26 @@ Block :
 		@TypeDefinitions
 	    | sVar:
 		@VariableDeclarations
+      | sModule:
+    @ModuleDefinition
 	    | *:
 		>
 	]}
 	sBegin
 	@BeginStmt;
 
-  % TODO
 ModuleDefinition :
-	sModule
+	sIdentifier  oSymbolStkPushLocalIdentifier
+
 	% Program scope, distinct from implicit scope surrounding
 	% program which contains predefined names
 	oSymbolTblPushScope
-
-  % Read in the module identifier and push it on the symbol stack
-	sIdentifier  oSymbolStkPushLocalIdentifier
-
-  % File descriptors not used in Modules
 
 	% Count is used to assign file descriptors to non-standard
 	% files.  We assume that "input" has file descriptor 1,
 	% "output" has descriptor 2 and user defined files have
 	% descriptors 3,4,...,n.
+
 	% oCountPush(three)
 	% {[
 	%     | sParmEnd:
@@ -903,22 +899,16 @@ ModuleDefinition :
 	% ]
 
   % TODO
-  oSymbolTblStripScope
-  oSymbolTblMergeScope
-
-  % Pop module identifier 
-	oSymbolStkPop
+  % oSymbolTblStripScope
+  % oSymbolTblMergeScope
 
 	% Pop program scope
-	oSymbolTblPopScope
+	oSymbolTblPopScope;
 
 	% Return control to the runtime
 	% monitor at the end of program execution
-	.tTrapBegin
-	.tTrap;
-
-  % From the instructions: "no halt"
-  % oEmitTrapKind(trHalt);
+	% .tTrapBegin
+	% .tTrap  oEmitTrapKind(trHalt);
 
 ConstantDefinitions :		% Process named constant definitions
 	{[

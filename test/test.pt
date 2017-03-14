@@ -1,5 +1,3 @@
 using output
-
-module M
-
+module m
 end
