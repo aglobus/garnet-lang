@@ -911,12 +911,14 @@ ModuleDefinition :
 	% .tTrap  oEmitTrapKind(trHalt);
 
 ConstantDefinitions :		% Process named constant definitions
-	{[
-	    | sIdentifier:
-		@ConstantValue
-	    | *:
-		>
-	]};
+sIdentifier
+@ConstantValue;
+	% {[
+	%     | sIdentifier:
+	% 	@ConstantValue
+	%     | *:
+	% 	>
+	% ]};
 
 ConstantValue :		% An identifier token has just been accepted
 	oSymbolStkPushLocalIdentifier
@@ -1010,7 +1012,7 @@ ConstantValue :		% An identifier token has just been accepted
 	oSymbolStkPop;		% name being defined
 
 TypeDefinitions :	% process named type definitions
-	{[
+	[
 	    | sIdentifier:
 		oSymbolStkPushLocalIdentifier
 		@TypeBody
@@ -1060,8 +1062,7 @@ TypeDefinitions :	% process named type definitions
 		oTypeStkPop
 		oTypeStkPop
 	    | *:
-		>
-	]};
+	];
 
 TypeBody :
 	% Push a type stack entry for the structure type (e.g. array)

@@ -1,3 +1,2 @@
 using output
-module m
-end
+type t : integer
