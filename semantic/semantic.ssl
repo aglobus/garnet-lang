@@ -870,6 +870,7 @@ Block :
 
 ModuleDefinition :
 	sIdentifier  oSymbolStkPushLocalIdentifier
+	oSymbolStkSetKind(syModule)
 
 	% Program scope, distinct from implicit scope surrounding
 	% program which contains predefined names
