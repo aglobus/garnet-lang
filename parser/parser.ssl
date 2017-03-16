@@ -185,6 +185,8 @@ Declarations :
     @DecsAndStmts 'end'
 	    | 'def':
       @HandleProcedure
+      | ';':
+      .sNullStmt
 	    | *:
       >
 	]};
@@ -368,7 +370,6 @@ OptVarDecl :
   .sVar
   pIdentifier
   .sIdentifier
-  @OptVarDecl
     | *:
   >
   }];
@@ -379,6 +380,35 @@ ProcedureHeading :
   % empty parenthesis. Unlike PT where they're optional
   % So the bulk of logic goes under the '(' case
   % if we see anything other than the left parenthesis, don't do anything
+
+
+  '('
+  [
+    | ')':
+    | *:
+      {
+                {
+                    % formal parameter identifier
+                    [
+                        | 'var':
+                            pIdentifier  .sIdentifier
+                            .sVar
+                        | *:
+                            pIdentifier  .sIdentifier
+                    ]
+                    ':'
+                    % type identifier
+                    pIdentifier  .sIdentifier
+                    [
+                        | ',':
+                        | *:
+                            >
+                    ]
+                }
+                ')'
+    ]
+    .sParmEnd;
+
   [
     | '(':
 		{
@@ -489,17 +519,17 @@ CallStmt :
 	]
 	.sParmEnd;
 
-BeginStmt :
-	.sBegin
-	{
-	    @Statement
-	    [
-		| ';':
-		| 'end':
-		    .sEnd
-		    >
-	    ]
-	};
+% BeginStmt :
+% 	.sBegin
+% 	{
+% 	    @Statement
+% 	    [
+% 		| ';':
+% 		| 'end':
+% 		    .sEnd
+% 		    >
+% 	    ]
+% 	};
 
 IfStmt :
   % The heading is pretty straightforward
@@ -530,9 +560,9 @@ IfStmt :
   [
     | 'elsif':
       .sElse
-      .sBegin
+      % .sBegin
       @IfStmt
-      .sEnd
+      % .sEnd
     | 'else':
       .sElse
       @Statements
@@ -578,97 +608,53 @@ UnlessStmt :
     | 'end':
   ];
 
+
 CaseStmt :
-  % Emit the tokens and read in an expression
-	.sCaseStmt
-	@Expression
-	.sExpnEnd
-
-  % Read in the first 'when' and call CaseAlt which
-  % parses one or more comma separated constants
-  % There can be 0 or more 'when' clauses in Garnet
-  % so only proceed if we actually see one
-  [
-    | 'when':
-      @CaseAlt
-    | *:
-  ]
-
-  % Calling CaseAlt handles the 'then' keyword
-  % and it also calls @Statements to read in the sequence of statements
-  % If we reach here, then we've already read in the statements
-  % and must decide on what to do next
-
-  {[
-    % If we see another 'when', call @CaseAlt again
-    | 'when':
-      @CaseAlt
-    % If we see an else, read in the statements that belong in that block
-    | 'else':
-      .sElse
-      @Statements
-    % If we see the 'end' keyword, then we're done with the case statement
-    % and we can emit sCaseEnd and exit
-    | 'end':
-      .sCaseEnd
-      >
-    | *:
-      >
-  ]};
-
-  % Original body
-	% @CaseAlternative
-	% {[
-	%     | ';':
-	% 	% since case alternatives cannot be null, allow
-	% 	% for the common situation of an extra semicolon
-	% 	% at the end of the list of case alternatives.
-	% 	[
-	% 	    | 'end':
-	% 		>
-	% 	    | *:
-	% 		@CaseAlternative
-	% 	]
-	%     | 'end':
-	% 	>
-	% ]}
-
-	% .sCaseEnd;
-
-CaseAlt :
-{
-  @OptionallySignedIntegerConstant
-  [
-    | ',':
-    | *:
-      >
-  ]
-}
-'then'
-.sLabelEnd % Necessary if you want to keep the same semantic output stream as PT
-@Statements;
+        .sCaseStmt
+        @Expression
+        .sExpnEnd
+        {[
+            | 'when':
+                @CaseAlternative
+            | *:
+                >
+        ]}
+        [
+            | 'else' :
+                .sElse
+                @Statements
+            | *:
+        ]
+        'end'
+        .sCaseEnd;
 
 CaseAlternative :
-	% A case alternative is a statement labelled by
-	% one or more optionally signed integer constants
+        {
+            @OptionallySignedIntegerConstant
+            [
+                | ',':
+                | *:
+                    >
+            ]
+        }
+        .sLabelEnd
+        'then'
+        @Statements;
 
-	{
-	    @OptionallySignedIntegerConstant
-	    [
-		| ',':
-		| *:
-		    >
-	    ]
-	}
-	.sLabelEnd
-	':'  @Statement;
+WhileStmt :
+        .sWhileStmt
+        @Expression
+        .sExpnEnd
+        'do'
+        @Statements
+        'end';
 
 WhileStmt :
 	.sWhileStmt
 	@Expression
 	.sExpnEnd
 	'do'
-	@Statement;
+	@Statements;
 
 DoStmt :
   .sDoStmt
@@ -681,19 +667,19 @@ DoStmt :
   @Statements
   'end';
 
-RepeatStmt :
-	.sRepeatStmt
-	{
-	    @Statement
-	    [
-		| ';':
-		| 'until':
-		    .sRepeatEnd
-		    >
-	    ]
-	}
-	@Expression
-	.sExpnEnd;
+% RepeatStmt :
+% 	.sRepeatStmt
+% 	{
+% 	    @Statement
+% 	    [
+% 		| ';':
+% 		| 'until':
+% 		    .sRepeatEnd
+% 		    >
+% 	    ]
+% 	}
+% 	@Expression
+% 	.sExpnEnd;
 
 Expression :
 	@SimpleExpression

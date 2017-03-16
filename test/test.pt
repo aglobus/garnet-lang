@@ -1,3 +1,4 @@
 using output
-module M
+
+def hello ()
 end

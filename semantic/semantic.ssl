@@ -869,7 +869,7 @@ Block :
 	@BeginStmt;
 
 ModuleDefinition :
-	sIdentifier  oSymbolStkPushLocalIdentifier
+	sIdentifier  oSymbolStkPushIdentifier
 	oSymbolStkSetKind(syModule)
 
 	% Program scope, distinct from implicit scope surrounding
@@ -1291,6 +1291,7 @@ VariableDeclarations :
 	]};
 
 VariableAttributes :
+  oCountPush (zero)
 	oSymbolStkPushLocalIdentifier
 	[ oSymbolStkChooseKind
 	    | syUndefined, syExternal:
@@ -1300,6 +1301,16 @@ VariableAttributes :
 	]
 	% Push the variable's structure and
 	% component types onto the type stack
+
+  % Count the rest of the vars and push them on the sym. stack
+
+  [
+    | sVar:
+      
+    | *:
+  ]
+
+
 	@TypeBody
 	[ oSymbolStkChooseKind
 	    | syExternal:	% file parameter to program
