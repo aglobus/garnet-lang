@@ -1265,15 +1265,19 @@ SubrangeUpperBound :
 	];
 
 VariableDeclarations :
+   oCountPush (one)
+  sIdentifier
+  @VariableAttributes
 	{[
-	    | sIdentifier:
+	    | sVar:
+      sIdentifier
 		@VariableAttributes
 	    | *:
 		>
 	]};
 
 VariableAttributes :
-  oCountPush (zero) % TODO add back in later
+  oCountIncrement
 	oSymbolStkPushLocalIdentifier
 	[ oSymbolStkChooseKind
 	    | syUndefined, syExternal:
@@ -1281,28 +1285,13 @@ VariableAttributes :
 		#eMultiplyDefined
 		% The new definition will obscure the old one
 	]
+
 	% Push the variable's structure and
 	% component types onto the type stack
 
-  % Count the rest of the vars and push them on the sym. stack
-
+  % @Foo
+  oCountPop
   {[
-    | sIdentifier:
-      oCountIncrement
-      oSymbolStkPushLocalIdentifier
-      [ oSymbolStkChooseKind
-          | syUndefined, syExternal:
-          | *:
-        #eMultiplyDefined
-        % The new definition will obscure the old one
-      ]
-      % When we read sVar, we want to accept the type and "enter it in the SymbolTable for all the identifiers you pushed, one at a time"
-    | sVar:
-      % Accept the type and set it to the top of the type stack
-      @Foo
-      % While there are still things on the CountStack
-      % Pop things off the symbol stack 
-      >
     | *:
     >
   ]};
@@ -1311,6 +1300,12 @@ VariableAttributes :
 % Should "accept" the type
 Foo :
 	@TypeBody
+  {
+  [oCountChoose
+    |zero:
+      >
+    |*:
+    oCountDecrement
 	[ oSymbolStkChooseKind
 	    | syExternal:	% file parameter to program
 		oTypeStkSwap	% structure on top
@@ -1390,7 +1385,9 @@ Foo :
 		oSymbolTblEnter
 	]
 	oSymbolStkPop
-	oTypeStkPop
+  oTypeStkSwap
+  }
+  oTypeStkPop
 	oTypeStkPop;
 
 AllocateVar :
