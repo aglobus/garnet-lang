@@ -365,14 +365,14 @@ VariableDeclarations :
   % New rule to read in multiple comma separated declarations
   % e.g. a,b,c... etc
 OptVarDecl :
-  [{
+  {[
     | ',':
-  .sVar
   pIdentifier
+  .sVar
   .sIdentifier
     | *:
   >
-  }];
+  ]};
 
 ProcedureHeading :
 	% Accept zero or more procedure formal parameter declarations.

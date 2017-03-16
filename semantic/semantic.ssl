@@ -870,46 +870,28 @@ Block :
 
 ModuleDefinition :
 	sIdentifier  oSymbolStkPushIdentifier
-	oSymbolStkSetKind(syModule)
+	% oSymbolStkSetKind(syModule)
 
-	% Program scope, distinct from implicit scope surrounding
-	% program which contains predefined names
+  [ oSymbolStkChooseKind
+    | syUndefined:
+    |  syExternal:
+       #eExternalDeclare
+    | *:
+      % some other error
+  ]
+  oSymbolStkSetKind(syModule)
+  oTypeStkPush(tpNull)
+  oTypeTblEnter
+  oSymbolStkEnterTypeReference
+  oSymbolTblEnter
 	oSymbolTblPushScope
-
-	% Count is used to assign file descriptors to non-standard
-	% files.  We assume that "input" has file descriptor 1,
-	% "output" has descriptor 2 and user defined files have
-	% descriptors 3,4,...,n.
-
-	% oCountPush(three)
-	% {[
-	%     | sParmEnd:
-	% 	>
-	%     | *:
-	% 	@ProgramParameter
-	% ]}
-	% oCountPop
-
 	@Block
-
-	% Check that all file parameters have been declared
-	% [ oSymbolTblLookupExternal
-	%     | yes:
-	% 	#eExternalUndeclared
-	%     | *:
-	% ]
-
-  % TODO
-  % oSymbolTblStripScope
-  % oSymbolTblMergeScope
-
-	% Pop program scope
-	oSymbolTblPopScope;
-
-	% Return control to the runtime
-	% monitor at the end of program execution
-	% .tTrapBegin
-	% .tTrap  oEmitTrapKind(trHalt);
+  oSymbolTblUpdate
+  oSymbolStkPop
+  oTypeTblUpdate
+  oTypeStkPop
+  oSymbolTblStripScope
+  oSymboltTblMergeScope;
 
 ConstantDefinitions :		% Process named constant definitions
 sIdentifier
@@ -1291,7 +1273,7 @@ VariableDeclarations :
 	]};
 
 VariableAttributes :
-  % oCountPush (zero) % TODO add back in later
+  oCountPush (zero) % TODO add back in later
 	oSymbolStkPushLocalIdentifier
 	[ oSymbolStkChooseKind
 	    | syUndefined, syExternal:
@@ -1304,13 +1286,30 @@ VariableAttributes :
 
   % Count the rest of the vars and push them on the sym. stack
 
-  % [
-  %   | sVar:
-      
-  %   | *:
-  % ]
+  {[
+    | sIdentifier:
+      oCountIncrement
+      oSymbolStkPushLocalIdentifier
+      [ oSymbolStkChooseKind
+          | syUndefined, syExternal:
+          | *:
+        #eMultiplyDefined
+        % The new definition will obscure the old one
+      ]
+      % When we read sVar, we want to accept the type and "enter it in the SymbolTable for all the identifiers you pushed, one at a time"
+    | sVar:
+      % Accept the type and set it to the top of the type stack
+      @Foo
+      % While there are still things on the CountStack
+      % Pop things off the symbol stack 
+      >
+    | *:
+    >
+  ]};
 
-
+% Split the second half of VariableAttributes into an aux. function
+% Should "accept" the type
+Foo :
 	@TypeBody
 	[ oSymbolStkChooseKind
 	    | syExternal:	% file parameter to program
