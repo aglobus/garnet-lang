@@ -1291,7 +1291,7 @@ VariableDeclarations :
 	]};
 
 VariableAttributes :
-  oCountPush (zero)
+  % oCountPush (zero) % TODO add back in later
 	oSymbolStkPushLocalIdentifier
 	[ oSymbolStkChooseKind
 	    | syUndefined, syExternal:
@@ -1304,11 +1304,11 @@ VariableAttributes :
 
   % Count the rest of the vars and push them on the sym. stack
 
-  [
-    | sVar:
+  % [
+  %   | sVar:
       
-    | *:
-  ]
+  %   | *:
+  % ]
 
 
 	@TypeBody
@@ -1616,10 +1616,13 @@ Statement :
 		@WhileStmt
 	    | sCaseStmt:
 		@CaseStmt
-	    | sRepeatStmt:
-		@RepeatStmt
+	  %   | sRepeatStmt:
+		% @RepeatStmt
+      | sDoStmt
+    @DoStmt
 	    | sNullStmt:
 	];
+
 
 AssignmentStmt :
 	% Assignment is permitted to scalar variables only.
@@ -1841,19 +1844,41 @@ WhileStmt :
 	oFixPopTargetAddress
 	oFixPopForwardBranch;
 
-RepeatStmt :
-	.tRepeatBegin
+DoStmt :
+	.tDoBegin
 	oFixPushTargetAddress		% top-of-loop branch target
-	{[
-	    | sRepeatEnd:
-		>
-	    | *:
-		@Statement
-	]}
-	.tRepeatControl
 	@BooleanControlExpression
-	.tRepeatTest
-	oFixPopTargetAddress;
+	@Statement
+	.tDoBreakIf
+	oFixPushForwardBranch
+	oEmitNullAddress		% exit branch
+	oFixSwap		% top-of-loop target back on top
+	.tDoEnd
+	oFixPopTargetAddress
+	oFixPopForwardBranch;
+
+	.tDoBegin
+	oFixPushTargetAddress		% top-of-loop branch target
+  @Statement
+  .tDoBreakIf
+  @BooleanControlExpression
+   
+  sBreakIf
+;
+
+% RepeatStmt :
+% 	.tRepeatBegin
+% 	oFixPushTargetAddress		% top-of-loop branch target
+% 	{[
+% 	    | sRepeatEnd:
+% 		>
+% 	    | *:
+% 		@Statement
+% 	]}
+% 	.tRepeatControl
+% 	@BooleanControlExpression
+% 	.tRepeatTest
+% 	oFixPopTargetAddress;
 
 CaseStmt :
 	.tCaseBegin

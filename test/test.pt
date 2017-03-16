@@ -1,4 +1,6 @@
 using output
 
-def hello ()
+do
+
+break if true
 end
