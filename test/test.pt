@@ -1,2 +1,2 @@
 using output
-var a,b,c : integer
+var a,b,c : int

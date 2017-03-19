@@ -995,7 +995,7 @@ ConstantValue :		% An identifier token has just been accepted
 	oSymbolStkPop;		% name being defined
 
 TypeDefinitions :	% process named type definitions
-	[
+	              [
 	    | sIdentifier:
 		oSymbolStkPushLocalIdentifier
 		@TypeBody
@@ -1265,19 +1265,8 @@ SubrangeUpperBound :
 	];
 
 VariableDeclarations :
-   oCountPush (one)
+  oCountPush (one)
   sIdentifier
-  @VariableAttributes
-	{[
-	    | sVar:
-      sIdentifier
-		@VariableAttributes
-	    | *:
-		>
-	]};
-
-VariableAttributes :
-  oCountIncrement
 	oSymbolStkPushLocalIdentifier
 	[ oSymbolStkChooseKind
 	    | syUndefined, syExternal:
@@ -1286,15 +1275,37 @@ VariableAttributes :
 		% The new definition will obscure the old one
 	]
 
+	{[
+	    | sVar:
+      sIdentifier
+      @VariableAttributes
+      | sIdentifier:
+      @Foo
+      oCountPop
+	    | *:
+		>
+	]};
+
+VariableAttributes :
+  oCountIncrement
+	% oSymbolStkPushLocalIdentifier
+  oSymbolStkPushIdentifier
+	[ oSymbolStkChooseKind
+	    | syUndefined, syExternal:
+	    | *:
+		#eMultiplyDefined
+		% The new definition will obscure the old one
+	];
+
 	% Push the variable's structure and
 	% component types onto the type stack
 
   % @Foo
-  oCountPop
-  {[
-    | *:
-    >
-  ]};
+  % oCountPop
+  % {[
+  %   | *:
+  %   >
+  % ]};
 
 % Split the second half of VariableAttributes into an aux. function
 % Should "accept" the type
@@ -1384,6 +1395,7 @@ Foo :
 		oSymbolStkEnterTypeReference
 		oSymbolTblEnter
 	]
+  ]
 	oSymbolStkPop
   oTypeStkSwap
   }
