@@ -1,2 +1,4 @@
 using output
-var a,b,c : int
+
+module M
+end

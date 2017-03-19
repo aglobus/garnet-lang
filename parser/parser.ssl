@@ -386,7 +386,6 @@ ProcedureHeading :
   [
     | ')':
     | *:
-      {
                 {
                     % formal parameter identifier
                     [
@@ -408,46 +407,6 @@ ProcedureHeading :
                 ')'
     ]
     .sParmEnd;
-
-  [
-    | '(':
-		{
-      % This matching rule handles the argument identifier (before the type is specified)
-      % The 'var' keyword is optional, if we see it, emit sVar
-      % but if don't see it or the closing parenthesis, consume the identifier token
-      % and emit sIdentifier
-      [
-        | 'var':
-          pIdentifier .sIdentifier
-          .sVar
-        | ')':
-          .sParmEnd
-          >
-        | *:
-          pIdentifier .sIdentifier
-      ]
-      % The colon to distinguish between the identifier and type is not optional
-      ':'
-
-      % Read in the type, also not optional. If we made it this far
-      % then there definitely must be a type
-      pIdentifier .sIdentifier
-
-      % We can read in one or more arguments. If we see a comma, consume it and do nothing
-      % which will return is back up to the top of the loop and we can read in more arguments
-      % A closing parenthesis will emit sParmEnd and return
-      % Anything else and exit
-      [
-        | ',':
-        | ')':
-        .sParmEnd
-          >
-        | *:
-          >
-      ]
-    }
-    | *:
-  ];
 
 Statement :
 	[
