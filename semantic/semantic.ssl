@@ -1901,6 +1901,8 @@ CaseStmt :
 	{[
 	    | sCaseEnd:
 		>
+      | sElse:
+    @CaseElse
 	    | *:
 		@CaseAlternative
 	]}
@@ -1917,6 +1919,64 @@ CaseStmt :
 	]}
 	oCasePopDisplay
 	oCountPop;
+
+CaseElse :
+  .tCaseElse
+	% {[
+	%     | sLabelEnd:
+	% 	>
+	%     | sIdentifier:
+	% 	oSymbolStkPushIdentifier
+	% 	[ oSymbolStkChooseKind
+	% 	    | syConstant:
+	% 		oTypeStkPushSymbol
+	% 		[ oTypeStkChooseKind
+	% 		    | tpInteger:
+	% 			oValuePushSymbol
+	% 			[
+	% 			    | sNegate:
+	% 				oValueNegate
+	% 			    | *:
+	% 			]
+	% 			[ oCaseLookupLabel
+	% 			    | yes:
+	% 				#eDuplicateLabel
+	% 			    | *:
+	% 				oCasePushLabel
+	% 			]
+	% 			oValuePop
+	% 		    | *:
+	% 			#eIntegerConstReqd
+	% 			% no repair since effects are local
+	% 		]
+	% 		oTypeStkPop
+	% 	    | syUndefined:
+	% 		#eUndefinedIdentifier
+	% 	    | *:
+	% 		#eIntegerConstReqd
+	% 	]
+	% 	oSymbolStkPop
+	%     | sInteger:
+	% 	oValuePushInteger
+	% 	[
+	% 	    | sNegate:
+	% 		oValueNegate
+	% 	    | *:
+	% 	]
+	% 	[ oCaseLookupLabel
+	% 	    | yes:
+	% 		#eDuplicateLabel
+	% 	    | *:
+	% 		oCasePushLabel
+	% 	]
+	% 	oValuePop
+	% ]}
+	@Statement
+	.tCaseMerge
+	oFixPushForwardBranch
+	oEmitNullAddress		% merge branch at end of statement
+	oFixSwap			% keep case select branch on top
+	oCountIncrement;
 
 CaseAlternative :
 	% A case alternative is a series of integer

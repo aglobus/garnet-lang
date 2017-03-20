@@ -1,4 +1,12 @@
 using output
 
-module M
+case i
+    when 42,43 then
+    x = 1
+
+    when 44 then
+    x = 2
+
+    else
+    x = 3
 end
