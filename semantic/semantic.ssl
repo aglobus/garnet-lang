@@ -16,7 +16,8 @@
 %
 
 Input :
-	sIdentifier 
+  sIdentifier
+	firstInputToken = sIdentifier 
 	firstSemanticToken = sIdentifier
 	firstCompoundSemanticToken = sIdentifier
 	sInteger
@@ -74,7 +75,9 @@ Input :
 	sAnd
 	sNot
 	sNewLine
-	lastSemanticToken = sNewLine;
+  sEndOfFile
+  lastInputToken = sEndOfFile
+	lastSemanticToken = sEndOfFile;
 
 Output :	% corresponds to coder.ssl input
 	tMultiply 
@@ -144,17 +147,12 @@ Output :	% corresponds to coder.ssl input
   tLength
   tIndex
   tStringEqual
+  tLiteralChar
 	tLiteralInteger
 	tLiteralBoolean
 	tLiteralString
-	tLiteralBoolean
 	tStringDescriptor
 	tSkipString
-  tConcatenate
-  tSubstring
-  tLength
-  tIndex
-  tStringEqual
 	tIfThen
 	tIfMerge
 	tCaseSelect
@@ -891,7 +889,7 @@ ModuleDefinition :
   oTypeTblUpdate
   oTypeStkPop
   oSymbolTblStripScope
-  oSymboltTblMergeScope;
+  oSymbolTblMergeScope;
 
 ConstantDefinitions :		% Process named constant definitions
 sIdentifier
@@ -1633,7 +1631,7 @@ Statement :
 		@CaseStmt
 	  %   | sRepeatStmt:
 		% @RepeatStmt
-      | sDoStmt
+      | sDoStmt:
     @DoStmt
 	    | sNullStmt:
 	];
@@ -3032,7 +3030,7 @@ ReadProcedure :
 				oTypeStkPushComponent
 				[ oTypeStkChooseKind
 				    | tpString:
-					@ReadCharParameterList
+					@ReadStringParameterList
 				    | *:
 					@ReadNonStringParameterList
 				]

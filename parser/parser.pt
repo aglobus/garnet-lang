@@ -162,6 +162,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 
 	{ Output Tokens }
 	sIdentifier = 0;
+	firstInputToken = 0;
 	firstSemanticToken = 0;
 	firstCompoundSemanticToken = 0;
 	sInteger = 1;
@@ -194,26 +195,32 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	sThen = 27;
 	sElse = 28;
 	sWhileStmt = 29;
-	sRepeatStmt = 30;
-	sRepeatEnd = 31;
-	sEq = 32;
-	sNE = 33;
-	sLT = 34;
-	sLE = 35;
-	sGT = 36;
-	sGE = 37;
-	sAdd = 38;
-	sSubtract = 39;
-	sMultiply = 40;
-	sDivide = 41;
-	sModulus = 42;
-	sInfixOr = 43;
-	sOr = 44;
-	sInfixAnd = 45;
-	sAnd = 46;
-	sNot = 47;
-	sNewLine = 48;
-	lastSemanticToken = 48;
+	sPublic = 30;
+	sModule = 31;
+	sDoStmt = 32;
+	sBreakIf = 33;
+	sSubstring = 34;
+	sLength = 35;
+	sIndex = 36;
+	sEq = 37;
+	sNE = 38;
+	sLT = 39;
+	sLE = 40;
+	sGT = 41;
+	sGE = 42;
+	sAdd = 43;
+	sSubtract = 44;
+	sMultiply = 45;
+	sDivide = 46;
+	sModulus = 47;
+	sInfixOr = 48;
+	sOr = 49;
+	sInfixAnd = 50;
+	sAnd = 51;
+	sNot = 52;
+	sNewLine = 53;
+	sEndOfFile = 54;
+	lastSemanticToken = 53;
 
 { ===== }
 

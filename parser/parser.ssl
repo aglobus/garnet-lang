@@ -82,6 +82,7 @@ Input :
 
 Output :
 	sIdentifier 
+  firstInputToken = sIdentifier
 	firstSemanticToken = sIdentifier
 	firstCompoundSemanticToken = sIdentifier
 	sInteger
@@ -139,6 +140,7 @@ Output :
 	sAnd
 	sNot
 	sNewLine
+  sEndOfFile
 	lastSemanticToken = sNewLine;
 
 

@@ -63,6 +63,7 @@
 
 	{ Output Tokens }
 	sIdentifier = 0;
+	firstInputToken = 0;
 	firstSemanticToken = 0;
 	firstCompoundSemanticToken = 0;
 	sInteger = 1;
@@ -119,6 +120,7 @@
 	sAnd = 51;
 	sNot = 52;
 	sNewLine = 53;
+	sEndOfFile = 54;
 	lastSemanticToken = 53;
 
 	{ Input/Output Tokens }
