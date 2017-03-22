@@ -3,4 +3,7 @@ using output
 module M
        def *foo()
        end
+
+       def bar()
+       end
 end
