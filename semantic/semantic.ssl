@@ -147,7 +147,6 @@ Output :	% corresponds to coder.ssl input
   tLength
   tIndex
   tStringEqual
-  tLiteralChar
 	tLiteralInteger
 	tLiteralBoolean
 	tLiteralString
@@ -1277,7 +1276,7 @@ VariableDeclarations :
 	    | sVar:
       sIdentifier
       @VariableAttributes
-      | sIdentifier:
+      | *:
       @Foo
       oCountPop
 	    | *:
@@ -2052,7 +2051,7 @@ Operand :
 		    | one:
 			oSymbolStkPush(syExpression)
 			oTypeStkPush(tpString)
-			.tLiteralChar
+			.tLiteralString
 			oEmitString
 		    | *:
 			oSymbolStkPush(syExpression)
@@ -2334,7 +2333,7 @@ ConstantOperand :
 	    | tpInteger, tpSubrange:
 		.tLiteralInteger
 	    | tpString:
-		.tLiteralChar
+		.tLiteralString
 	    | tpBoolean:
 		.tLiteralBoolean
 	    | tpPackedArray:	% always a named literal string

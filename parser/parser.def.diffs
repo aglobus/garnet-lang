@@ -1,6 +1,3 @@
-a65
-	firstInputToken = 0;
-.
-a121
-	sEndOfFile = 54;
+a123
+	lastInputToken = 54;
 .

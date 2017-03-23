@@ -141,6 +141,7 @@ Output :
 	sNot
 	sNewLine
   sEndOfFile
+  lastInputToken = sEndOfFile
 	lastSemanticToken = sNewLine;
 
 

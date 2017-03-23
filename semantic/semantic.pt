@@ -270,29 +270,28 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	tLength = 59;
 	tIndex = 60;
 	tStringEqual = 61;
-	tLiteralChar = 62;
-	tLiteralInteger = 63;
-	tLiteralBoolean = 64;
-	tLiteralString = 65;
-	tStringDescriptor = 66;
-	tSkipString = 67;
-	tIfThen = 68;
-	tIfMerge = 69;
-	tCaseSelect = 70;
-	tCaseMerge = 71;
-	tCaseEnd = 72;
-	tWhileTest = 73;
-	tWhileEnd = 74;
-	tDoBreakIf = 75;
-	tDoTest = 76;
-	tCaseElse = 77;
-	tSkipProc = 78;
-	tCallEnd = 79;
-	tLineNumber = 80;
-	tTrap = 81;
-	lastCompoundOutputToken = 81;
-	tEndOfFile = 82;
-	lastOutputToken = 82;
+	tLiteralInteger = 62;
+	tLiteralBoolean = 63;
+	tLiteralString = 64;
+	tStringDescriptor = 65;
+	tSkipString = 66;
+	tIfThen = 67;
+	tIfMerge = 68;
+	tCaseSelect = 69;
+	tCaseMerge = 70;
+	tCaseEnd = 71;
+	tWhileTest = 72;
+	tWhileEnd = 73;
+	tDoBreakIf = 74;
+	tDoTest = 75;
+	tCaseElse = 76;
+	tSkipProc = 77;
+	tCallEnd = 78;
+	tLineNumber = 79;
+	tTrap = 80;
+	lastCompoundOutputToken = 80;
+	tEndOfFile = 81;
+	lastOutputToken = 81;
 
 	{ Input/Output Tokens }
 
@@ -446,68 +445,68 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 	ModuleDefinition = 143;
 	BeginStmt = 1393;
 	ConstantValue = 184;
-	SymbolStkPushIntegerConstant = 4222;
-	SymbolStkPushStringConstant = 4234;
+	SymbolStkPushIntegerConstant = 4224;
+	SymbolStkPushStringConstant = 4236;
 	TypeBody = 407;
 	IndexType = 484;
 	ComponentType = 530;
 	SimpleType = 579;
-	ValuePushValuePlusOne = 4213;
-	SymbolStkPushIntegerType = 4246;
+	ValuePushValuePlusOne = 4215;
+	SymbolStkPushIntegerType = 4248;
 	SubrangeUpperBound = 689;
 	VariableAttributes = 792;
 	Foo = 807;
 	ProcedureHeading = 1091;
 	ProcedureParameterType = 1137;
 	ProcedurePrologue = 1208;
-	CountCopy = 4218;
+	CountCopy = 4220;
 	Statement = 1277;
 	AssignmentStmt = 1331;
 	CallStmt = 1407;
 	IfStmt = 1670;
 	WhileStmt = 1701;
-	CaseStmt = 1737;
+	CaseStmt = 1739;
 	DoStmt = 1718;
-	Variable = 2406;
-	Expression = 1910;
-	CompareAndSwapTypes = 2245;
-	OpenProcedure = 2826;
-	AssignProcedure = 2895;
-	WriteProcedure = 3059;
-	WritelnProcedure = 3597;
-	ReadProcedure = 3709;
-	ReadlnProcedure = 4071;
+	Variable = 2408;
+	Expression = 1912;
+	CompareAndSwapTypes = 2247;
+	OpenProcedure = 2828;
+	AssignProcedure = 2897;
+	WriteProcedure = 3061;
+	WritelnProcedure = 3599;
+	ReadProcedure = 3711;
+	ReadlnProcedure = 4073;
 	ActualParameters = 1540;
-	FlushActuals = 4286;
+	FlushActuals = 4288;
 	VariableActual = 1608;
-	BooleanControlExpression = 4198;
-	CaseSelectorExpression = 4181;
-	CaseElse = 1795;
-	CaseAlternative = 1806;
-	Operand = 1938;
-	UnaryOperator = 2075;
-	BinaryOperator = 2104;
-	FlushExpn = 4265;
-	ConstantOperand = 2540;
-	VariableOperand = 2576;
-	FunctionOperand = 2603;
-	SymbolStkPushIntegerVariable = 4253;
-	FileOperand = 2801;
-	CompareOperandAndResultTypes = 2345;
-	CompareRelationalOperandTypes = 2356;
-	VariableExtension = 2448;
-	StandardFunctionActual = 2706;
-	WriteString = 3389;
-	WriteNonString = 3513;
-	WriteStandardExpnList = 3322;
-	ReadStringParameterList = 3839;
-	ReadNonStringParameterList = 3905;
-	ReadString = 3971;
-	ReadNonString = 4000;
+	BooleanControlExpression = 4200;
+	CaseSelectorExpression = 4183;
+	CaseElse = 1797;
+	CaseAlternative = 1808;
+	Operand = 1940;
+	UnaryOperator = 2077;
+	BinaryOperator = 2106;
+	FlushExpn = 4267;
+	ConstantOperand = 2542;
+	VariableOperand = 2578;
+	FunctionOperand = 2605;
+	SymbolStkPushIntegerVariable = 4255;
+	FileOperand = 2803;
+	CompareOperandAndResultTypes = 2347;
+	CompareRelationalOperandTypes = 2358;
+	VariableExtension = 2450;
+	StandardFunctionActual = 2708;
+	WriteString = 3391;
+	WriteNonString = 3515;
+	WriteStandardExpnList = 3324;
+	ReadStringParameterList = 3841;
+	ReadNonStringParameterList = 3907;
+	ReadString = 3973;
+	ReadNonString = 4002;
 	}
 
 	{ S/SL Table Parameters }
-	sslTblSize = 4305;
+	sslTblSize = 4307;
 	minSslTableValue = -32767;
 	maxSslTableValue = 32767;
 { ===== End of contents of semantic.def }
@@ -2433,8 +2432,10 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 			case typeStkKind[typeStkTop] of
 			    tpInteger, tpSubrange:
 				dataAreaEnd := dataAreaEnd + wordSize;
-			    tpString, tpBoolean:
+			    tpBoolean:
 				dataAreaEnd := dataAreaEnd + byteSize;
+          tpString:
+        dataAreaEnd := dataAreaEnd + stringSize;
 			    tpArray, tpPackedArray:
 				begin
 				    size := typeStkUpperBound[typeStkTop]
@@ -2442,6 +2443,8 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 				    if (typeStkKind[typeStkTop-1] = tpInteger) or
 					   (typeStkKind[typeStkTop-1] = tpSubrange) then
 					size := size * wordSize;
+            if (typeStkKind[typeStkTop-1] = tpString) then
+          size := size * stringSize;
 
 				    dataAreaEnd := dataAreaEnd + size
 				end;

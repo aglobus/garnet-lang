@@ -220,6 +220,7 @@ program ScannerParser(output, stdIdentifiers, scanSsl, parseSsl, source,
 	sNot = 52;
 	sNewLine = 53;
 	sEndOfFile = 54;
+	lastInputToken = 54;
 	lastSemanticToken = 53;
 
 { ===== }
