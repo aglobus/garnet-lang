@@ -1862,7 +1862,7 @@ DoStmt :
 	oFixPushTargetAddress		% top-of-loop branch target
 	@Statement
 
-	.tDoBreakIf
+	sBreakIf .tDoBreakIf
 	@BooleanControlExpression
   .tDoTest
 
