@@ -1279,8 +1279,7 @@ VariableDeclarations :
       | *:
       @Foo
       oCountPop
-	    | *:
-		>
+      >
 	]};
 
 VariableAttributes :
