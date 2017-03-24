@@ -956,37 +956,68 @@ ConstantValue :		% An identifier token has just been accepted
 		oSymbolStkEnterValue
 		oValuePop
 	    | sLiteral:
-		oValuePush(one)	% implicit lower bound of string index type
-		oValuePushStringLength
-		[ oValueChoose
-		    | zero:
-			#eNullString
-			@SymbolStkPushStringConstant
-		    | one:
-			oSymbolStkLinkToStandardType(stdString)
-			oSymbolStkEnterStringValue
-		    | *:
-			% Emit a branch around the string since
-			% it is stored in the code area
-			.tSkipString
-			oFixPushForwardBranch
-			oEmitNullAddress
-			.tLiteralString
-			oEmitValue	% string length
-			% The string "address" is the location (offset)
-			% of the first character of the string
-			oSymbolStkEnterCodeAddress
-			oEmitString
-			oFixPopForwardBranch
-			oTypeStkPush(tpPackedArray)	% means literal string
-			oTypeStkEnterBounds
-			oTypeStkLinkToStandardComponentType(stdString)
-			oTypeTblEnter
-			oSymbolStkEnterTypeReference
-			oTypeStkPop
-		]
-		oValuePop	% Upper bound
-		oValuePop	% Lower bound
+      % make it a var 
+      oSymbolStkSetKind(syVariable)
+
+      % of type string
+      oSymbolStkLinkToStandardType(stdString)
+      oTypeStkPushSymbol
+
+      % allocate it
+      oAllocateAlignOnWord    
+      oSymbolStkEnterDataAddress
+      oAllocateVariable
+      oTypeStkPop
+
+      .tAssignBegin
+
+      % s is the thing to assign to
+      .tLiteralAddress
+      oValuePushSymbol
+      oEmitValue
+      oValuePop
+
+      % "foo" is the value
+      .tLiteralString
+      oValuePushStringLength
+      oEmitValue
+      oValuePop
+      oEmitString
+
+      % and assign it
+      .tAssignString
+
+		% oValuePush(one)	% implicit lower bound of string index type
+		% oValuePushStringLength
+		% [ oValueChoose
+		%     | zero:
+		% 	#eNullString
+		% 	@SymbolStkPushStringConstant
+		%     | one:
+		% 	oSymbolStkLinkToStandardType(stdString)
+		% 	oSymbolStkEnterStringValue
+		%     | *:
+		% 	% Emit a branch around the string since
+		% 	% it is stored in the code area
+		% 	.tSkipString
+		% 	oFixPushForwardBranch
+		% 	oEmitNullAddress
+		% 	.tLiteralString
+		% 	oEmitValue	% string length
+		% 	% The string "address" is the location (offset)
+		% 	% of the first character of the string
+		% 	oSymbolStkEnterCodeAddress
+		% 	oEmitString
+		% 	oFixPopForwardBranch
+		% 	oTypeStkPush(tpPackedArray)	% means literal string
+		% 	oTypeStkEnterBounds
+		% 	oTypeStkLinkToStandardComponentType(stdString)
+		% 	oTypeTblEnter
+		% 	oSymbolStkEnterTypeReference
+		% 	oTypeStkPop
+		% ]
+		% oValuePop	% Upper bound
+		% oValuePop	% Lower bound
 	]
 	oSymbolTblEnter
 	oSymbolStkPop;		% name being defined
