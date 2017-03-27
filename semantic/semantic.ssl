@@ -2030,6 +2030,7 @@ Expression :
 	    @Operand
 	    @UnaryOperator
 	    @BinaryOperator
+      @TernaryOperator
 	    [
 		| sExpnEnd:
 		    >
@@ -2120,6 +2121,14 @@ UnaryOperator :
 	    | sNot:
 		.tNot
 		oTypeStkPush(tpBoolean)
+    	    | sLength:
+		.tLength
+		oTypeStkPush(tpString) % will change to tpInteger after CompareAndSwapTypes returns
+		oSymbolStkSetKind(syExpression)
+		@CompareAndSwapTypes
+		oTypeStkPop % only the result type remains
+		oTypeStkSetKind(tpInteger) % reset result type
+		>> % exit
 	    | *:
 		>>		% bypass type check
 	]
@@ -2134,9 +2143,20 @@ BinaryOperator :
 	% but that would probably be less efficient on average.
 	[
 	    | sAdd:
-		.tAdd
-		oTypeStkPush(tpInteger)	% result type
+      [ oTypeStkChooseKind % just need to check top type for this choice. Validation will be done when comparing types of stack entries.
+    | tpString:
+                  .tConcatenate
+        oTypeStkPush(tpString) % result type
+                | *:
+                  .tAdd
+                  oTypeStkPush(tpInteger) % result type
+  ]
 		@CompareOperandAndResultTypes
+      | sIndex:
+.tIndex
+      oTypeStkPush(tpString) % for now
+      @CompareOperandAndResultTypes
+      oTypeStkSetKind(tpInteger) % reset result from tpString to tpInteger
 	    | sSubtract:
 		.tSubtract
 		oTypeStkPush(tpInteger)
@@ -2154,10 +2174,21 @@ BinaryOperator :
 		oTypeStkPush(tpBoolean)
 		@CompareOperandAndResultTypes
 	    | sEq:
-		.tEq
+      [ oTypeStkChooseKind
+    | tpString: 
+      .tStringEqual
+    | *:                      % default cause, for e.g. for tpInteger
+      .tEq 
+  ]
 		@CompareRelationalOperandTypes
 	    | sNE:
-		.tNE
+      [ oTypeStkChooseKind
+  | tpString:
+    .tStringEqual
+    .tNot
+  | *:         % default case, for example to handle tpInteger as before
+    .tNE 
+]
 		@CompareRelationalOperandTypes
 	    | sGT:
 		.tGT
@@ -2185,6 +2216,24 @@ BinaryOperator :
 		@CompareOperandAndResultTypes
 	    | *:
 	];
+
+TernaryOperator :
+ % type stack should look like tpString -> tpInteger -> tpInteger at this point to be a valid operation 
+[
+  | sSubstring:
+     .tSubstring
+      oTypeStkPush(tpInteger) % for now
+      @CompareAndSwapTypes % no idea what is causing that case selector does not match label in the output here
+      oTypeStkPop
+      @CompareAndSwapTypes
+      oTypeStkPop
+      oTypeStkSetKind(tpString)
+      @CompareAndSwapTypes
+      oTypeStkPop % result remains (a tpString)
+      oSymbolStkPop
+      oSymbolStkSetKind(syExpression)
+  | *: 
+];
 
 CompareAndSwapTypes :
 	% Compare the top two type stack entries for assignment

@@ -1681,6 +1681,7 @@ program SemanticAnalysis (output, semanticSsl, parseStream, temp, tCode, options
 
         oSymbolTblMergeScope:
         begin
+			    Assert((lexicLevelStackTop >= 1), assert31);
           lexicLevelStackTop := lexicLevelStackTop - 1;
         end;
 
