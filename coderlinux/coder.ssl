@@ -730,6 +730,26 @@ Block:
     % array bounds and file descriptors which are emitted as assignment
     % statements, nested procedure definitions and finally statements.
     {[
+
+      | tAssignBegin:
+          @AssignStmt
+      | tCallBegin:
+          @CallStmt
+      | tIfBegin:
+          @IfStmt
+      | tWhileBegin:
+          @WhileStmt
+      | tRepeatBegin:
+          @RepeatStmt
+      | tCaseBegin:
+          @CaseStmt
+      | tWriteBegin:
+          @WriteProc
+      | tReadBegin:
+          @ReadProc
+      | tTrapBegin:
+          @TrapStmt
+
 	| tSkipString:
             % Emit a string constant to the data area
             oEmitNone(iData)                    %       .data
@@ -781,8 +801,8 @@ Block:
 	    oFixForwardBranch	% Branch around procedure defn's
 	    oFixPopAddress
 	| *:
-    ]
-    @Statements;
+    ];
+    % @Statements;
 
 
 Routine:
