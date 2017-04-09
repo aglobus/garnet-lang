@@ -1491,7 +1491,7 @@ OperandPushExpression:
 	    @OperandPushVariable
 	| tLiteralInteger:
 	    oOperandPushInteger
-	| tLiteralChar:
+	| tLiteralString:
 	    oOperandPushChar
 	| tLiteralBoolean:
 	    oOperandPushBoolean
@@ -1978,7 +1978,7 @@ OperandPushExpressionAssignPopPop:
 	    @OperandPushVariable
 	| tLiteralInteger:
 	    oOperandPushInteger
-	| tLiteralChar:
+	| tLiteralString:
 	    oOperandPushChar
 	| tLiteralBoolean:
 	    oOperandPushBoolean
