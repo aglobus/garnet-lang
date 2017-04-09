@@ -1492,7 +1492,18 @@ OperandPushExpression:
 	| tLiteralInteger:
 	    oOperandPushInteger
 	| tLiteralString:
-	    oOperandPushChar
+	    % oOperandPushChar
+
+	    % Emit string literal to data area
+	    oEmitNone(iData)			%	.data
+	    % Emit the string
+	    tLiteralString
+	    oEmitString				% sNNN:	.asciz	"SSSSS"
+	    oEmitNone(iText)			%	.text
+	    % Get the string literal's address
+	    oOperandPushStringDescriptor
+	    @EmitStringDescriptor		%	lea	sNNN, %T
+
 	| tLiteralBoolean:
 	    oOperandPushBoolean
 	% | tStringDescriptor:
