@@ -836,7 +836,7 @@ Routine:
 		    @OperandPopAndFreeTemp	% ... 8(%ebp), formal
 		    @OperandPopAndFreeTemp	% ... 8(%ebp)
 
-		| tStoreParmChar, tStoreParmBoolean:
+		| tStoreParmString, tStoreParmBoolean:
 		    oOperandSwap		% ... formal, 8(%ebp)
 		    oOperandPushCopy		% ... formal, 8(%ebp), 8(%ebp)
 		    oOperandSwapLeftAndDest	% ... 8(%ebp), formal, 8(%ebp)
