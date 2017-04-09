@@ -750,12 +750,12 @@ Block:
       | tTrapBegin:
           @TrapStmt
 
-	| tSkipString:
-            % Emit a string constant to the data area
-            oEmitNone(iData)                    %       .data
-            tLiteralString
-            oEmitString                         % sNN:  .asciz  "SSSSS"
-            oEmitNone(iText)                    %       .text
+	% | tSkipString:
+  %           % Emit a string constant to the data area
+  %           oEmitNone(iData)                    %       .data
+  %           tLiteralString
+  %           oEmitString                         % sNN:  .asciz  "SSSSS"
+  %           oEmitNone(iText)                    %       .text
 	| tLiteralInteger:
 	    % initialize an array or file descriptor
 	    oOperandPushInteger			% ... lower bound / file number
@@ -1495,21 +1495,21 @@ OperandPushExpression:
 	    oOperandPushChar
 	| tLiteralBoolean:
 	    oOperandPushBoolean
-	| tStringDescriptor:
-	    oOperandPushStringDescriptor
-	    % Get a string literal's address
-	    @EmitStringDescriptor		%	lea	sNNN, %T
-	| tSkipString:
-	    % Emit string literal to data area
-	    oEmitNone(iData)			%	.data
-	    % Emit the string
-	    tLiteralString
-	    oEmitString				% sNNN:	.asciz	"SSSSS"
-	    oEmitNone(iText)			%	.text
-	    % Get the string literal's address
-	    tStringDescriptor
-	    oOperandPushStringDescriptor
-	    @EmitStringDescriptor		%	lea	sNNN, %T
+	% | tStringDescriptor:
+	%     oOperandPushStringDescriptor
+	%     % Get a string literal's address
+	%     @EmitStringDescriptor		%	lea	sNNN, %T
+	% | tSkipString:
+	%     % Emit string literal to data area
+	%     oEmitNone(iData)			%	.data
+	%     % Emit the string
+	%     tLiteralString
+	%     oEmitString				% sNNN:	.asciz	"SSSSS"
+	%     oEmitNone(iText)			%	.text
+	%     % Get the string literal's address
+	%     tStringDescriptor
+	%     oOperandPushStringDescriptor
+	%     @EmitStringDescriptor		%	lea	sNNN, %T
 	| tNegate:
 	    @OperandNegate
 	| tAdd:
@@ -1563,11 +1563,11 @@ OperandPushExpression:
     ]};
 
 
-EmitStringDescriptor:
-    % Get the address of a string into a temp reg.
-    % The descriptor is already on the operand stack.
+% EmitStringDescriptor:
+%     % Get the address of a string into a temp reg.
+%     % The descriptor is already on the operand stack.
 
-    @OperandForceAddressIntoTemp;	%	lea	sNNN, %T
+%     @OperandForceAddressIntoTemp;	%	lea	sNNN, %T
 
 
 OperandPushVariable:
