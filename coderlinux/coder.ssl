@@ -29,8 +29,8 @@
 
 
 Input:		% corresponds to semantic.ssl output
-    tMultiply
-    firstInputToken = tMultiply
+    tMultiply 
+    firstOutputToken = tMultiply
     tDivide
     tModulus
     tAdd
@@ -54,21 +54,21 @@ Input:		% corresponds to semantic.ssl output
     tVarParm
     tFetchAddress
     tFetchInteger
-    tFetchChar
+    tFetchString
     tFetchBoolean
     tAssignBegin
     tAssignAddress
     tAssignInteger
-    tAssignChar
+    tAssignString
     tAssignBoolean
     tStoreParmAddress
     tStoreParmInteger
-    tStoreParmChar
+    tStoreParmString
     tStoreParmBoolean
     tSubscriptBegin
     tSubscriptAddress
     tSubscriptInteger
-    tSubscriptChar
+    tSubscriptString
     tSubscriptBoolean
     tArrayDescriptor
     tFileDescriptor
@@ -76,8 +76,9 @@ Input:		% corresponds to semantic.ssl output
     tIfEnd
     tCaseBegin
     tWhileBegin
-    tRepeatBegin
-    tRepeatControl
+    tDoBegin
+    tDoEnd
+    % tRepeatControl
     tCallBegin
     tParmEnd
     tProcedureEnd
@@ -89,9 +90,13 @@ Input:		% corresponds to semantic.ssl output
 
     % Compound T-codes are those that take operands
     tLiteralAddress
-    firstCompoundToken = tLiteralAddress
+    firstCompoundOutputToken = tLiteralAddress
+    tConcatenate
+    tSubstring
+    tLength
+    tIndex
+    tStringEqual
     tLiteralInteger
-    tLiteralChar
     tLiteralBoolean
     tLiteralString
     tStringDescriptor
@@ -103,15 +108,18 @@ Input:		% corresponds to semantic.ssl output
     tCaseEnd
     tWhileTest
     tWhileEnd
-    tRepeatTest
+    tDoBreakIf
+    tDoTest
+    tCaseElse
     tSkipProc
     tCallEnd
     tLineNumber
     tTrap
-    lastCompoundToken = tTrap
+    lastCompoundOutputToken = tTrap
 
     tEndOfFile
-    lastInputToken = tEndOfFile;
+    lastOutputToken = tEndOfFile;
+
 
 
 Error:
