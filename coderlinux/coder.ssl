@@ -276,7 +276,7 @@ mechanism OperandStack:
 	% Push an entry with the value of the last accepted integer
 	% (tLiteralInteger tcode), length word and manifest addressing mode.
 
-    oOperandPushChar
+    % oOperandPushChar
 	% Push an entry with the value of the last accepted character
 	% (tLiteralChar tcode), length byte and manifest addressing mode.
 
