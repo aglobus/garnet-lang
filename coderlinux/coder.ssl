@@ -2101,6 +2101,37 @@ OperandPushExpressionAssignPopPop:
     ]};
 
 OperandAssignStringPopPop:
+    @SaveTempRegsToStack	%	pushl %eax .. %edx
+
+    % lea s2, temp
+    @OperandForceAddressIntoTemp	%	lea	sNNN, %T
+
+    % pushl temp
+    @OperandForceToStack
+
+    % lea s1, temp
+    @OperandForceAddressIntoTemp
+
+    % pushl, temp
+    @OperandForceToStack
+
+    % call pttrap101
+    oOperandPop
+    oOperandPushMode(mTrap)
+    oOperandSetValue(trAssignString)
+    oOperandSetLength(word)
+    oEmitSingle(iCall)
+
+    %addl $8, %esp
+    oOperandPushMode(mStackReg)
+    oOperandSetLength(word)
+    oOperandPushMode(mManifest)
+    oOperandSetLength(word)
+    oOperandSetValue(four)
+    oEmitDouble(iAdd)
+    oOperandPop
+
+    @RestoreTempRegsFromStack	%	popl	%edx .. $eax
 ;
 
 OperandConcatenatePop:
