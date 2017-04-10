@@ -2100,6 +2100,29 @@ OperandPushExpressionAssignPopPop:
 	    @OperandEofFunction
     ]};
 
+OperandAssignStringPopPop:
+;
+
+OperandConcatenatePop:
+;
+
+OperandSubstringPopPop:
+;
+
+OperandIndexPop:
+;
+
+OperandLength:
+;
+
+OperandChr:
+;
+
+OperandOrd:
+;
+
+OperandStringEqualPop:
+;
 
 OperandNegateAssignPopPop:
     % Assign the negation of the right (top) operand's value to
