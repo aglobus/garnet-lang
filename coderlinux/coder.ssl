@@ -836,7 +836,14 @@ Routine:
 		    @OperandPopAndFreeTemp	% ... 8(%ebp), formal
 		    @OperandPopAndFreeTemp	% ... 8(%ebp)
 
-		| tStoreParmString, tStoreParmBoolean:
+    | tStoreParmString:
+		    oOperandSwap		% ... formal, 8(%ebp)
+		    oOperandPushCopy		% ... formal, 8(%ebp), 8(%ebp)
+		    oOperandSwapLeftAndDest	% ... 8(%ebp), formal, 8(%ebp)
+		    oOperandSetLength(word) % passing in pointer
+		    @OperandAssignStringPopPop			%	movl	8(%ebp),formal
+
+		| tStoreParmBoolean:
 		    oOperandSwap		% ... formal, 8(%ebp)
 		    oOperandPushCopy		% ... formal, 8(%ebp), 8(%ebp)
 		    oOperandSwapLeftAndDest	% ... 8(%ebp), formal, 8(%ebp)
@@ -2178,7 +2185,47 @@ OperandConcatenatePop:
     oOperandSetLength(byte);    
 
 OperandSubstringPopPop:
-;
+    @SaveTempRegsToStack	%	pushl %eax .. %edx
+
+    % pushl i2
+    @OperandForceToStack
+
+    % pushl i1
+    @OperandForceToStack
+
+    % lea s1, temp
+    @OperandForceAddressIntoTemp	%	lea	sNNN, %T
+
+    % pushl temp
+    @OperandForceToStack
+
+    % call pttrap104
+    oOperandPushMode(mTrap)
+    oOperandSetValue(trSubString)
+    oOperandSetLength(word)
+    oEmitSingle(iCall)
+
+    % addl $12, esp
+    oOperandPushMode(mStackReg)
+    oOperandSetLength(word)
+    oOperandPushMode(mManifest)
+    oOperandSetLength(word)
+    oOperandSetValue(twelve)
+    oEmitDouble(iAdd)           % 	addl 	$8, %esp
+
+    % Accept result
+    oOperandPushMode(mScratchReg1)
+    oOperandSetLength(word)
+    oOperandPushMode(mResultReg)
+    oOperandSetLength(word)                                                                           
+    oEmitDouble(iMov)           %       movl    %eax, %S1
+    oOperandPop %eax
+
+    % Restore temp regs
+    @RestoreTempRegsFromStack	%	popl	%edx .. $eax
+
+    @OperandForceIntoTemp       %       movl %S1, %T
+    oOperandSetLength(byte);    
 
 OperandIndexPop:
 ;
