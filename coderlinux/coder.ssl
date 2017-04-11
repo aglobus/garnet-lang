@@ -739,8 +739,8 @@ Block:
           @IfStmt
       | tWhileBegin:
           @WhileStmt
-      | tRepeatBegin:
-          @RepeatStmt
+      % | tRepeatBegin:
+      %     @RepeatStmt
       | tCaseBegin:
           @CaseStmt
       | tWriteBegin:
@@ -887,8 +887,8 @@ Statements:
 	    @IfStmt
 	| tWhileBegin:
 	    @WhileStmt
-	| tRepeatBegin:
-	    @RepeatStmt
+	% | tRepeatBegin:
+	%     @RepeatStmt
 	| tCaseBegin:
 	    @CaseStmt
 	| tWriteBegin:
@@ -1117,40 +1117,40 @@ SkipToEndWhile:
     ]};
 
 
-RepeatStmt:
-    % Save the target address for the top-of-loop branch
-    oFixPushAddress				% bNNN:
-    oEmitMergeSourceCoordinate
-    @Statements					% loop body
-    tRepeatControl
-    @OperandPushBooleanControlExpression 	% ... cond
-    tRepeatTest
+% RepeatStmt:
+%     % Save the target address for the top-of-loop branch
+%     oFixPushAddress				% bNNN:
+%     oEmitMergeSourceCoordinate
+%     @Statements					% loop body
+%     tRepeatControl
+%     @OperandPushBooleanControlExpression 	% ... cond
+%     tRepeatTest
 
-    % Optimize if loop condition is known at compile time
-    [ oOperandChooseJumpCondition
-	| iJnever:
-            % Exit condition is always false (until false) - an infinite loop.
-            % false branches fall through to top-of-loop backward branch
-            oFixAndFreeFalseBranches
-            oEmitUnconditionalBackwardBranch 	%  jmp      bNN
+%     % Optimize if loop condition is known at compile time
+%     [ oOperandChooseJumpCondition
+% 	| iJnever:
+%             % Exit condition is always false (until false) - an infinite loop.
+%             % false branches fall through to top-of-loop backward branch
+%             oFixAndFreeFalseBranches
+%             oEmitUnconditionalBackwardBranch 	%  jmp      bNN
 
-        | iJalways:
-            % Exit condition is always true (until true) - loop never repeats.
-            % fall through without backward branch
-            oFixAndFreeFalseBranches
+%         | iJalways:
+%             % Exit condition is always true (until true) - loop never repeats.
+%             % fall through without backward branch
+%             oFixAndFreeFalseBranches
 
-	| *:
-	    % Emit a conditional forward branch to exit the loop.
-	    % True branches follow the conditional exit path, false
-	    % branches fall through to the top-of-loop branch.
-	    @OperandInfixOr			%	jcond	fNNN
-	    oEmitUnconditionalBackwardBranch	% 	jmp	bNNN
-    ]
+% 	| *:
+% 	    % Emit a conditional forward branch to exit the loop.
+% 	    % True branches follow the conditional exit path, false
+% 	    % branches fall through to the top-of-loop branch.
+% 	    @OperandInfixOr			%	jcond	fNNN
+% 	    oEmitUnconditionalBackwardBranch	% 	jmp	bNNN
+%     ]
 
-    oFixPopAddress
-    % Fix the true branches exiting the statement
-    oFixAndFreeShuntList			% fNNN:
-    oOperandPop;
+%     oFixPopAddress
+%     % Fix the true branches exiting the statement
+%     oFixAndFreeShuntList			% fNNN:
+%     oOperandPop;
 
 
 CaseStmt:
@@ -1581,11 +1581,11 @@ OperandPushExpression:
     ]};
 
 
-% EmitStringDescriptor:
-%     % Get the address of a string into a temp reg.
-%     % The descriptor is already on the operand stack.
+EmitStringDescriptor:
+    % Get the address of a string into a temp reg.
+    % The descriptor is already on the operand stack.
 
-%     @OperandForceAddressIntoTemp;	%	lea	sNNN, %T
+    @OperandForceAddressIntoTemp;	%	lea	sNNN, %T
 
 
 OperandPushVariable:
@@ -1615,7 +1615,8 @@ OperandPushVariable:
     ]
     [
 	| tFetchInteger:
-	| tFetchChar, tFetchBoolean:
+	% | tFetchChar, tFetchBoolean:
+	| tFetchBoolean:
  	    oOperandSetLength(byte)
 	| *: 
 	    % Value is not to be loaded
@@ -1997,7 +1998,7 @@ OperandPushExpressionAssignPopPop:
 	| tLiteralInteger:
 	    oOperandPushInteger
 	| tLiteralString:
-	    oOperandPushChar
+	    % oOperandPushChar
 	| tLiteralBoolean:
 	    oOperandPushBoolean
 	| tAssignInteger:
@@ -2086,13 +2087,14 @@ OperandPushExpressionAssignPopPop:
 	    @OperandGreaterPop
 	    @OperandNot
 	| tChr:
-	    [
+      @OperandChr
+	    % [
 		% | tAssignChar:
 		%     @OperandChrAssignPopPop
 		%     >
-		| *:
-		    @OperandChr
-	    ]
+		% | *:
+		%     @OperandChr
+	    % ]
 	| tOrd:
 	    [
 		| tAssignInteger:
@@ -2233,11 +2235,11 @@ OperandIndexPop:
 OperandLength:
 ;
 
-OperandChr:
-;
+% OperandChr:
+% ;
 
-OperandOrd:
-;
+% OperandOrd:
+% ;
 
 OperandStringEqualPop:
 ;
