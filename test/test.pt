@@ -1,18 +1,3 @@
 using output
 var x : string
-var y : integer
-var z : boolean
-
-% each line is a simple test
-
-y = #"hello"
-
-y = "hello" ? "el"
-
-z = "Hi" == "hi"
-
-z = "hi" != "bye"
-
-x = "hi" + "bye"
-
-x = "bigstring" $ 2..5
+x = "foo"
