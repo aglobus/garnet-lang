@@ -29,96 +29,96 @@
 
 
 Input:		% corresponds to semantic.ssl output
-    tMultiply 
-    firstInputToken = tMultiply
-    tDivide
-    tModulus
-    tAdd
-    tSubtract
-    tEQ
-    tNE
-    tGT
-    tGE
-    tLT
-    tLE
-    tAnd
-    tInfixAnd
-    tOr
-    tInfixOr
-    tNegate
-    tNot
-    tChr
-    tOrd
-    tEoln
-    tEOF
-    tVarParm
-    tFetchAddress
-    tFetchInteger
-    tFetchString
-    tFetchBoolean
-    tAssignBegin
-    tAssignAddress
-    tAssignInteger
-    tAssignString
-    tAssignBoolean
-    tStoreParmAddress
-    tStoreParmInteger
-    tStoreParmString
-    tStoreParmBoolean
-    tSubscriptBegin
-    tSubscriptAddress
-    tSubscriptInteger
-    tSubscriptString
-    tSubscriptBoolean
-    tArrayDescriptor
-    tFileDescriptor
-    tIfBegin
-    tIfEnd
-    tCaseBegin
-    tWhileBegin
-    tDoBegin
-    tDoEnd
-    % tRepeatControl
-    tCallBegin
-    tParmEnd
-    tProcedureEnd
-    tWriteBegin
-    tReadBegin
-    tTrapBegin
-    tWriteEnd
-    tReadEnd
+	tMultiply 
+	firstInputToken = tMultiply
+	tDivide
+	tModulus
+	tAdd
+	tSubtract
+	tEQ
+	tNE
+	tGT
+	tGE
+	tLT
+	tLE
+	tAnd
+	tInfixAnd
+	tOr
+	tInfixOr
+	tNegate
+	tNot
+	tChr
+	tOrd
+	tEoln
+	tEOF
+	tVarParm
+	tFetchAddress
+	tFetchInteger
+	tFetchString
+	tFetchBoolean
+	tAssignBegin
+	tAssignAddress
+	tAssignInteger
+	tAssignString
+	tAssignBoolean
+	tStoreParmAddress
+	tStoreParmInteger
+	tStoreParmString
+	tStoreParmBoolean
+	tSubscriptBegin
+	tSubscriptAddress
+	tSubscriptInteger
+	tSubscriptString
+	tSubscriptBoolean
+	tArrayDescriptor
+	tFileDescriptor
+	tIfBegin
+	tIfEnd
+	tCaseBegin
+	tWhileBegin
+	tDoBegin
+  tDoEnd
+	% tRepeatControl
+	tCallBegin
+	tParmEnd
+	tProcedureEnd
+	tWriteBegin
+	tReadBegin
+	tTrapBegin
+	tWriteEnd
+	tReadEnd
 
-    % Compound T-codes are those that take operands
-    tLiteralAddress
-    firstCompoundToken = tLiteralAddress
-    tConcatenate
-    tSubstring
-    tLength
-    tIndex
-    tStringEqual
-    tLiteralInteger
-    tLiteralBoolean
-    tLiteralString
-    tStringDescriptor
-    tSkipString
-    tIfThen
-    tIfMerge
-    tCaseSelect
-    tCaseMerge
-    tCaseEnd
-    tWhileTest
-    tWhileEnd
-    tDoBreakIf
-    tDoTest
-    tCaseElse
-    tSkipProc
-    tCallEnd
-    tLineNumber
-    tTrap
-    lastCompoundToken = tTrap
+	% Compound T-codes are those that take operands
+	tLiteralAddress
+	firstCompoundToken = tLiteralAddress
+  tConcatenate
+  tSubstring
+  tLength
+  tIndex
+  tStringEqual
+	tLiteralInteger
+	tLiteralBoolean
+	tLiteralString
+	tStringDescriptor
+	tSkipString
+	tIfThen
+	tIfMerge
+	tCaseSelect
+	tCaseMerge
+	tCaseEnd
+	tWhileTest
+	tWhileEnd
+	tDoBreakIf
+  tDoTest
+  tCaseElse
+	tSkipProc
+	tCallEnd
+	tLineNumber
+	tTrap
+	lastCompoundToken = tTrap
 
-    tEndOfFile
-    lastInputToken = tEndOfFile;
+	tEndOfFile
+	lastInputToken = tEndOfFile;
 
 
 

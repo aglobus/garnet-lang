@@ -1,12 +1,6 @@
-c81
-	firstInputToken = 0;
-.
 c138
 	firstCompoundToken = 56;
 .
 c163
 	lastCompoundToken = 80;
-.
-c165
-	lastInputToken = 81;
 .

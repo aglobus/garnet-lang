@@ -990,26 +990,24 @@ program Coder (output, coderSsl, tCode, object, options);
      if (compoundTokenLength > 0) then
         begin
 
-	    repeat
-		if (compoundTokenText[i] = ord('"')) or
-			(compoundTokenText[i] = ord('\')) then
-		    begin
-			write (object, '\');
-			write (object, chr (compoundTokenText[i]));
-		    end
-		else if (compoundTokenText[i] = ord('	')) then
-		    write (object, '\t')
-		else
-		    write (object, chr (compoundTokenText[i]));
-		i := i + 1
-	    until i > compoundTokenLength;
+          repeat
+        if (compoundTokenText[i] = ord('"')) or
+          (compoundTokenText[i] = ord('\')) then
+            begin
+          write (object, '\');
+          write (object, chr (compoundTokenText[i]));
+            end
+        else if (compoundTokenText[i] = ord('	')) then
+            write (object, '\t')
+        else
+            write (object, chr (compoundTokenText[i]));
+        i := i + 1
+          until i > compoundTokenLength;
 
-           write (object, '"');
-           writeln (object);
-      end
-     else
+     end
 
-
+      write (object, '"');
+      writeln (object);
 	end { EmitX86StringLiteral };
 
 
@@ -1869,7 +1867,7 @@ program Coder (output, coderSsl, tCode, object, options);
 
 	    { If the token is a compound token,
 	      read its associated value	    	}
-	    if (acceptedToken >= firstCompoundToken) and 
+	    if (acceptedToken >= firstCompoundToken) and
 	       (acceptedToken <= lastCompoundToken) then
 		begin
 		    compoundToken := acceptedToken;
