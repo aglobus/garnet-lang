@@ -1,6 +1,12 @@
+c81
+	firstOutputToken = 0;
+.
 c138
-	firstCompoundToken = 56;
+	firstCompoundOutputToken = 56;
 .
 c163
-	lastCompoundToken = 80;
+	lastCompoundOutputToken = 80;
+.
+c165
+	lastOutputToken = 81;
 .

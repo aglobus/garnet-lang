@@ -78,7 +78,7 @@
 
 	{ Input Tokens }
 	tMultiply = 0;
-	firstInputToken = 0;
+	firstOutputToken = 0;
 	tDivide = 1;
 	tModulus = 2;
 	tAdd = 3;
@@ -135,7 +135,7 @@
 	tWriteEnd = 54;
 	tReadEnd = 55;
 	tLiteralAddress = 56;
-	firstCompoundToken = 56;
+	firstCompoundOutputToken = 56;
 	tConcatenate = 57;
 	tSubstring = 58;
 	tLength = 59;
@@ -160,9 +160,9 @@
 	tCallEnd = 78;
 	tLineNumber = 79;
 	tTrap = 80;
-	lastCompoundToken = 80;
+	lastCompoundOutputToken = 80;
 	tEndOfFile = 81;
-	lastInputToken = 81;
+	lastOutputToken = 81;
 
 	{ Output Tokens }
 

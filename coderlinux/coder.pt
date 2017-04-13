@@ -134,7 +134,7 @@ program Coder (output, coderSsl, tCode, object, options);
 
 	{ Input Tokens }
 	tMultiply = 0;
-	firstInputToken = 0;
+	firstOutputToken = 0;
 	tDivide = 1;
 	tModulus = 2;
 	tAdd = 3;
@@ -191,7 +191,7 @@ program Coder (output, coderSsl, tCode, object, options);
 	tWriteEnd = 54;
 	tReadEnd = 55;
 	tLiteralAddress = 56;
-	firstCompoundToken = 56;
+	firstCompoundOutputToken = 56;
 	tConcatenate = 57;
 	tSubstring = 58;
 	tLength = 59;
@@ -216,9 +216,9 @@ program Coder (output, coderSsl, tCode, object, options);
 	tCallEnd = 78;
 	tLineNumber = 79;
 	tTrap = 80;
-	lastCompoundToken = 80;
+	lastCompoundOutputToken = 80;
 	tEndOfFile = 81;
-	lastInputToken = 81;
+	lastOutputToken = 81;
 
 	{ Output Tokens }
 
@@ -442,7 +442,6 @@ program Coder (output, coderSsl, tCode, object, options);
 	sslTblSize = 4191;
 	minSslTableValue = -32767;
 	maxSslTableValue = 32767;
-
 { ===== End of contents of coder.def }
 
 
@@ -576,7 +575,7 @@ program Coder (output, coderSsl, tCode, object, options);
     type
 	ShuntRef = undefined .. maxShunts;
 	OperandStkRef = 0 .. operandStkSize;
-	InputTokens = firstInputToken .. lastInputToken;
+	InputTokens = firstOutputToken .. lastOutputToken;
 	ErrorCodes = firstErrorCode .. lastErrorCode;
 	FailureCodes = firstFailureCode .. lastFailureCode;
 
@@ -1004,7 +1003,7 @@ program Coder (output, coderSsl, tCode, object, options);
         i := i + 1
           until i > compoundTokenLength;
 
-     end
+        end;
 
       write (object, '"');
       writeln (object);
@@ -1867,8 +1866,8 @@ program Coder (output, coderSsl, tCode, object, options);
 
 	    { If the token is a compound token,
 	      read its associated value	    	}
-	    if (acceptedToken >= firstCompoundToken) and
-	       (acceptedToken <= lastCompoundToken) then
+	    if (acceptedToken >= firstCompoundOutputToken) and
+	       (acceptedToken <= lastCompoundOutputToken) then
 		begin
 		    compoundToken := acceptedToken;
 		    read (tCode, compoundTokenValue);
