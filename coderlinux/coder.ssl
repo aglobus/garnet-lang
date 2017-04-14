@@ -1289,26 +1289,38 @@ CaseEnd:
     oCaseEnterMergeAddress		% mNNN:
     oEmitMergeSourceCoordinate;
 
-
 EmitDefaultCaseAbort:
     % Emit a case abort alternative to handle selector values
     % which do not match a label.
-
-    oCaseEnterAbortAddress		% aNNN:
-    % Save the abort address for use by the selector out-of-range error
-    % checks in the EmitCaseSubscriptJump rule.
-    oFixPushAddress			% bNNN:		(label for abort)
-    oFixSwapAddresses			% (keep branch around case body on top)
-    oEmitMergeSourceCoordinate
-    oOperandPushMode(mLineNum)		% ... n
-    oOperandSetLength(word)
-    @OperandForceToStack		%	pushl	n
-    oOperandPop				% ...
-    oOperandPushMode(mTrap)
-    oOperandSetValue(trCaseAbort)
-    oEmitSingle(iCall)			% 	call  caseAbort
-    oOperandPop;
-
+ 
+    %Checks for else clause. If present run code similar to CaseVariant but without a caselabel, otherwise emit the abort trap call.
+    [
+        | tCaseElse:
+ 
+         	% An alternative body of the case statement
+        	oCaseEnterVariantAddress    	% vNNN:
+        	oEmitMergeSourceCoordinate
+            @Statements
+        	tCaseMerge
+        	% Merge branch to exit the case statement
+        	oEmitCaseMergeBranch   	%   jmp mNNN
+ 
+        | *:
+        	oCaseEnterAbortAddress  	% aNNN:
+        	% Save the abort address for use by the selector out-of-range error
+        	% checks in the EmitCaseSubscriptJump rule.
+        	oFixPushAddress     	% bNNN: 	(label for abort)
+        	oFixSwapAddresses       	% (keep branch around case body on top)
+        	oEmitMergeSourceCoordinate
+        	oOperandPushMode(mLineNum)  	% ... n
+        	oOperandSetLength(word)
+        	@OperandForceToStack    	%   pushl   n
+        	oOperandPop         	% ...
+            oOperandPushMode(mTrap)
+        	oOperandSetValue(trCaseAbort)
+        	oEmitSingle(iCall)      	%   call  caseAbort
+        	oOperandPop
+    ];
 
 EmitCaseSubscriptJump:
     % Emit code to calculate the address of the selected alternative
