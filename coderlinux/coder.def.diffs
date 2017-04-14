@@ -1,12 +1,3 @@
-c81
-	firstOutputToken = 0;
-.
-c138
-	firstCompoundOutputToken = 56;
-.
-c163
-	lastCompoundOutputToken = 80;
-.
-c165
-	lastOutputToken = 81;
+a184
+	ten = 10;
 .
